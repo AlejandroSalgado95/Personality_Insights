@@ -5853,7 +5853,7 @@ button.btn-floating {
 
 .collapsible-header i {
   width: 2rem;
-  font-size: 1.6rem;
+  /*font-size: 1.6rem;*/
   display: inline-block;
   text-align: center;
   margin-right: 1rem;
@@ -6652,13 +6652,14 @@ textarea {
 }
 
 textarea.materialize-textarea {
-  line-height: normal;
-  overflow-y: hidden;
+  /*line-height: normal;*/
+  /*overflow-y: hidden;*/
   /* prevents scroll bar flash */
   padding: .8rem 0 .8rem 0;
   /* prevents text jump on Enter keypress */
   resize: none;
   min-height: 3rem;
+  max-height: 30rem;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }

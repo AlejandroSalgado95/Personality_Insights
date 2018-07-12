@@ -1,12 +1,20 @@
+//href="/PIServiceTwitter"
+
 $(document).ready(function() {
 
 
 	console.log("started TWITTER script");
 
+    /*
+    $( "#myForm" ).dialog({
+        autoOpen: false
+    });*/
+
 	$("#twitterButton").click (function(e){
 
 		e.preventDefault();
-		getTweets();
+        console.log("Twitter button was pressed");
+		showForm();
 		
 		
 	});
@@ -15,19 +23,39 @@ $(document).ready(function() {
 });
 
 
-function getTweets() {
+function showForm() {
 
-	$.ajax({
-        type:'GET',
-        dataType:'jsonp',
-        url:'http://api.twitter.com/1/statuses/user_timeline.json',
-        data:{screen_name:'Alex__Salgado', include_rts:false}, //show retweets
-        success:function(dataReceived) {
-           console.log(dataReceived);
-        },
-        error:function(req, status, error) {
-            alert('error: '+status);
-        }
-    });
+    //$( "#myForm" ).dialog('open');
+
+    
+    $( "#myForm" ).dialog({
+    open: function() {
+        // On open, hide the original submit button
+        //$( this ).find( "[type=submit]" ).hide();
+        console.log("dialog box opened");
+    }});
+
+    
+    /*
+	$( "#myForm" ).dialog({
+    open: function() {
+        // On open, hide the original submit button
+        //$( this ).find( "[type=submit]" ).hide();
+    },
+    buttons: [
+            {
+                text: "Analizar",
+                click: function() {
+                     form.submit();
+                }
+            },
+            {
+                text: "Cerrar",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        ]
+    });*/
 
 }

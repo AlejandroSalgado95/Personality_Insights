@@ -384,11 +384,12 @@ console.log("Request handler 'piService' was called.");
 //            2) Preguntar al usuario en que idioma estan los tweets
 //            3) Especificar al contentType de los parametros de Personality insights que es un application/json
 
-  console.log("Request handler 'piService' was called.");
+  console.log("Request handler 'piServiceTwitter' was called.");
 
     //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
+
   
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
@@ -399,12 +400,16 @@ console.log("Request handler 'piService' was called.");
 
 
 
+  var twitterAccount = querystring.parse(postData).twitterAccount;
+  var tweetsLang = querystring.parse(postData).tweetsLang;
+
+
   var twitterContent = { 
                   "contentItems":[]
                 };
 
 
-  var twitterParams = { screen_name: 'RicardoAnayaC',
+  var twitterParams = { screen_name: twitterAccount,
                         count:200,
                         include_rts: false,
                         exclude_replies : false,
@@ -413,17 +418,20 @@ console.log("Request handler 'piService' was called.");
 
   var count = 1;
   var tweetNum = 1;
-  var latestMaxID;
+  var latestMaxID ;
+  var pastMaxID = -1;
+  var notEnoughTweets = false;
+  var somethingWrong = false;
 
   async.whilst(
-
-      function() { return twitterContent.contentItems.length < 1000; },
+      //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets 
+      function() { return (twitterContent.contentItems.length < 1000 && !notEnoughTweets && !somethingWrong); },
 
       function(outerCallback) {
              
             if (count > 1){
 
-                 twitterParams = { screen_name: 'RicardoAnayaC',
+                 twitterParams = { screen_name: twitterAccount,
                         count:200,
                         include_rts: false,
                         exclude_replies : false,
@@ -432,11 +440,11 @@ console.log("Request handler 'piService' was called.");
                       };
             }
 
-
+            //Obten los ultimos 200 tweets que se han posteado en la cuenta de twitter
            twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
             
               if (!error) {
-
+                  //Empaqueta los tweets obtenidos en un arreglo de objetos (la configuracion de dicho arreglo es estrictamente especifica para poder ser analizado por el servicio PI de IBM)
                   async.forEachOf(tweets, function (element, index, innerCallback){
                      //console.log(element);
                      console.log('packing tweet number ' + tweetNum);
@@ -457,15 +465,28 @@ console.log("Request handler 'piService' was called.");
                      innerCallback();
                       
                    }, function(err){
-                        // if any of the saves produced an error, err would equal that error
+                        
+                        //Terminado de empaquetar esta ronda de tweets, manda a llamar otra iteracion (para ir a buscar otros 200 tweets)
+                        console.log(err);
                         console.log('finished packing all the tweets for round ' + count);
                         console.log('Amount of tweets packed until now:' + twitterContent.contentItems.length);
                         count = count + 1; 
                         latestMaxID = twitterContent.contentItems[twitterContent.contentItems.length - 1].id;
+
+                        if (latestMaxID != pastMaxID){
+                          pastMaxID = latestMaxID
+                        } else {
+                          notEnoughTweets = true;
+                        }
+
                         outerCallback();
 
                       } 
                   );
+
+              } else { //Si, por ejemplo, la cuenta de twitter a analizar no existe
+
+                  somethingWrong = true;
 
               }
 
@@ -476,137 +497,209 @@ console.log("Request handler 'piService' was called.");
 
           console.log("FINISHED PACKING ALL TWEETS");
 
-          var params = {
-                  content: twitterContent,
-                  // Content-type: el tipo de archivo a analizar, en este caso plain text
-                  content_type: 'application/json',
-                  content_language: 'es'
-          };
+          if (notEnoughTweets || somethingWrong)
+          {
+             if (notEnoughTweets){
 
+                console.log("NOT ENOUGH TWEETS IN GENERAL");
+                var someDate = new Date();
+                someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
+                cookieJar.set( "failedTwitterAccount", twitterAccount , { httpOnly: false, expires: someDate} );
+                cookieJar.set( "tweetsLang", tweetsLang , { httpOnly: false, expires: someDate} );
 
+             } else if (somethingWrong){
 
-            // Envia los parametros a Personality Insights
-            personality_insights.profile(params, function(error, json) {
-              if (error){
-                console.log('Error:', error);
-                response.end();
-              } else{
+                console.log("SOMETHING WRONG, MAYBE THE ACCOUNT DOES NOT EXIST");
+                var someDate = new Date();
+                someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
+                cookieJar.set( "somethingWrong", twitterAccount , { httpOnly: false, expires: someDate} );
 
+             }
 
-                 var valuesFromSelection = [];
-                 var id = 0;
+            pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
+                    if(err) throw err;
+                    //console.log(rows == NULL);
+                    console.log(rows.length);
 
-                 //Guarda el json en un archivo .txt dentro del servidor que este corriendo esta aplicacion web
-                fs.exists('documents/analisisPI.txt', function(exists){
-                  if(exists){
-                      console.log("yes file exists");
-                      //fs.appendFile('analisisPI.txt', json);
-                        
-                       fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
-                          if (err) return console.log(err);
-                          console.log('successfully appended new line');
-                       });
+                    if(rows.length == 0){
+                      console.log("\nNO EXISTOOOO\n");
+                      fs.readFile('./public/index2.html', null, function (error,data){
 
-                       fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
-                          if (err) return console.log(err);
-                          console.log('successfully appended json info');
+                        if (error){
+                          response.writeHead( 302, { "Location": "./public/error.html" } );
+                          console.log("No file found at location ... index2");
+                          //response.write('File not found! index2');
+                        } else{
+                          response.writeHead(200, {"Content-Type": "text/html"});
+                          response.write(data);
+                        }
+
+                        response.end();
+
                       });
-                   } else {
-                      console.log("file not exists")
-                      //fs.appendFile('analisisPI.txt', json);
-                      fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
-                          if (err) return console.log(err);
-                          console.log('successfully appended json info');
+                    }
+                    else{
+                      console.log("\nSI EXISTOOOOO\n");
+                      fs.readFile('./public/index.html', null, function (error,data){
+
+                        if (error){
+                          response.writeHead( 302, { "Location": "./public/error.html" } );
+                          console.log("No file found at location ... index");
+                          //response.write('File not found! index');
+                        } else{
+                          response.writeHead(200, {"Content-Type": "text/html"});
+                          response.write(data);
+                        }
+
+                        response.end();
+
                       });
-                   }
-                });
+                    }
+              });
+           
+          } else {
 
 
 
-                //Create profile in database
-                pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
-                        if(err) throw err;
-                        console.log('PERFIL CREADO');
-
-                        //Sacar el id
-                        pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
-                                  var papasCreados = 0;
-                                  if(err) throw err;
-                                  valuesFromSelection = rows;
-                                  //console.log(valuesFromSelection[0].id); //Imprime id
-                                  id = valuesFromSelection[0].id;
-                                  //Insertar los 5 big_5
-                                  for (var iA = 0; iA < 5; iA++) {
-                                    pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
-                                            if(err) throw err;
-                                            //console.log("Big Five Creado");
-                                            papasCreados++; //papa = 1 big_5
-                                            //console.log(papasCreados);
-
-                                            //Inserta los hijos de cada big_5, una vez que estos 5 ya fueron creados
-                                            if(papasCreados>=5){
-                                              console.log("YA VOY A CREAR LOS HIJOS");
-                                                for(iA = 0; iA<5; iA++){
-                                                for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
-                                                  console.log("\n"+json.personality[iA].name+"\n");
-                                                  console.log( json.personality[iA].children[iB].trait_id );
-                                                  console.log( json.personality[iA].children[iB].name);
-                                                  console.log( json.personality[iA].children[iB].percentile);
-                                                  console.log( json.personality[iA].children[iB].category);
-                                                  console.log( json.personality[iA].trait_id);
-
-                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
-                                                + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
-                                                + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
-                                                          if(err) throw err;
-                                                          console.log('Children Created');
-                                                  });
-                                                }
-                                              }
-                                          }
-                                    });
-                                  }
-                                  //Save needs in database
-                                  for (var iC = 0; iC < json.needs.length; iC++) {
-                                    pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
-                                    + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
-                                    + "'," + id + ", NULL);",function(err,rows){
-                                              if(err) throw err;
-                                              console.log('NEED Created');
-                                      });
-                                  }
-
-                                  //Save values in database
-                                  for (var iD = 0; iD < json.values.length; iD++) {
-                                    pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
-                                    + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
-                                    + "'," + id + ", NULL);",function(err,rows){
-                                              if(err) throw err;
-                                              console.log('VALUE Created');
-                                      });
-                                  }
-                          });
-                });
+              var params = {
+                      content: twitterContent,
+                      // Content-type: el tipo de archivo a analizar, en este caso plain text
+                      content_type: 'application/json',
+                      content_language: tweetsLang
+              };
 
 
 
-                  fs.readFile('./public/index.html', null, function (error,data){
-
+                // Envia los parametros a Personality Insights
+                personality_insights.profile(params, function(error, json) {
                   if (error){
-                    response.writeHead( 302, { "Location": "./public/error.html" } );
-                    //response.write('File not found!');
+                    console.log('Error:', error);
+                    response.end();
                   } else{
-                    response.writeHead(200, {"Content-Type": "text/html"});
-                    response.write(data);
+
+
+                     var valuesFromSelection = [];
+                     var id = 0;
+
+                     //Guarda el json en un archivo .txt dentro del servidor que este corriendo esta aplicacion web
+                    fs.exists('documents/analisisPI.txt', function(exists){
+                      if(exists){
+                          console.log("yes file exists");
+                          //fs.appendFile('analisisPI.txt', json);
+                            
+                           fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
+                              if (err) return console.log(err);
+                              console.log('successfully appended new line');
+                           });
+
+                           fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
+                              if (err) return console.log(err);
+                              console.log('successfully appended json info');
+                          });
+                       } else {
+                          console.log("file not exists")
+                          //fs.appendFile('analisisPI.txt', json);
+                          fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
+                              if (err) return console.log(err);
+                              console.log('successfully appended json info');
+                          });
+                       }
+                    });
+
+
+
+                    //Create profile in database
+                    pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+                            if(err) throw err;
+                            console.log('PERFIL CREADO');
+
+                            //Sacar el id
+                            pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
+                                      var papasCreados = 0;
+                                      if(err) throw err;
+                                      valuesFromSelection = rows;
+                                      //console.log(valuesFromSelection[0].id); //Imprime id
+                                      id = valuesFromSelection[0].id;
+                                      //Insertar los 5 big_5
+                                      for (var iA = 0; iA < 5; iA++) {
+                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
+                                                if(err) throw err;
+                                                //console.log("Big Five Creado");
+                                                papasCreados++; //papa = 1 big_5
+                                                //console.log(papasCreados);
+
+                                                //Inserta los hijos de cada big_5, una vez que estos 5 ya fueron creados
+                                                if(papasCreados>=5){
+                                                  console.log("YA VOY A CREAR LOS HIJOS");
+                                                    for(iA = 0; iA<5; iA++){
+                                                    for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
+                                                      console.log("\n"+json.personality[iA].name+"\n");
+                                                      console.log( json.personality[iA].children[iB].trait_id );
+                                                      console.log( json.personality[iA].children[iB].name);
+                                                      console.log( json.personality[iA].children[iB].percentile);
+                                                      console.log( json.personality[iA].children[iB].category);
+                                                      console.log( json.personality[iA].trait_id);
+
+                                                    pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
+                                                    + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
+                                                    + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
+                                                              if(err) throw err;
+                                                              console.log('Children Created');
+                                                      });
+                                                    }
+                                                  }
+                                              }
+                                        });
+                                      }
+                                      //Save needs in database
+                                      for (var iC = 0; iC < json.needs.length; iC++) {
+                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
+                                        + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
+                                        + "'," + id + ", NULL);",function(err,rows){
+                                                  if(err) throw err;
+                                                  console.log('NEED Created');
+                                          });
+                                      }
+
+                                      //Save values in database
+                                      for (var iD = 0; iD < json.values.length; iD++) {
+                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
+                                        + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
+                                        + "'," + id + ", NULL);",function(err,rows){
+                                                  if(err) throw err;
+                                                  console.log('VALUE Created');
+                                          });
+                                      }
+
+
+                                      fs.readFile('./public/index.html', null, function (error,data){
+
+                                            if (error){
+                                              response.writeHead( 302, { "Location": "./public/error.html" } );
+                                              console.log("No file found at location ... index");
+                                              //response.write('File not found! index');
+                                            } else{
+                                              response.writeHead(200, {"Content-Type": "text/html"});
+                                              response.write(data);
+                                            }
+
+                                            response.end();
+
+                                    });
+
+
+
+                              });
+                    });
+
+
                   }
-
-                  response.end();
-
-                });
+                }); //AQUI TERMINA LA FUNCION DE PERSONALITY INSIGHTS
 
 
-              }
-            });
+          }
+
+
 
 
       }
@@ -854,7 +947,6 @@ function pdfService(response,postData, pathname){
 
 
 function cssContent(response,postData, pathname){
-
 
 	var fullpath = './public' + pathname;
 

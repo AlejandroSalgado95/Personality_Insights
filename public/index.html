@@ -11,6 +11,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <title>Personality Insights</title>
 
+
+  <!-- jQuery Library -->
+ 
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -26,8 +32,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 <body>
 
 <nav class="nav-extended purple darken-4">
@@ -50,7 +58,7 @@
         <div class="row" style="padding-top:3.2em">
             <div class="col s12 m6" >
                 <h4 class="header">Descripción</h4>
-                <div class="row">
+                <div class="row" style="font-size:17px">
                   <div class="col s12 m8 l8">
                     <p id="insightsDescription">Cargando...</p>
                   </div>
@@ -58,7 +66,20 @@
                 </div>
                 <div style="width:24em;">
                     <a href="/Subir" style="margin-bottom:16px; font-size:14px;"class="waves-effect waves-light purple darken-4 btn">Subir de nuevo<i class="material-icons right">cloud_upload</i></a>
-                    <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px;"class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+                    <a id= "twitterButton" style="font-size:14px;"class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+
+<form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
+    
+    <label>Cuenta de Twitter:</label>
+    <input type="text" id="account" name = "twitterAccount" required>
+    <select id = "accountLang" name = "tweetsLang">
+	  <option value = "en">Ingles</option>
+       <option value = "es">Espanol</option>
+    </select>
+    <br>
+    <input type="submit" value ="Analizar">
+    <button>Cerrar</button>
+</form>
 
                 </div>
             </div>
@@ -66,11 +87,32 @@
             <div class="col s12 m12 l6">
               <div class="sample-chart-wrapper">
                 <canvas id="myChart" height="260"></canvas>
+			
+
+<ul class="collapsible" style="border: 2px solid #842ca0;">
+   <li>
+     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+     <div class="collapsible-body"><span>
+Describe de forma general, c&oacute;mo interact&uacute;a una persona con el mundo.
+El modelo incluye cinco dimensiones primarias:
+<br>
+<br>
+<ol>
+<li> Simpat&iacute;a es la tendencia de una persona a ser compasiva y cooperadora con los dem&aacute;s.</li>
+<li>Responsabilidad es la tendencia de una persona a actuar de forma organizada o meticulosa.</li>
+<li>Extraversi&oacute;n es la tendencia de una persona a buscar la estimulaci&oacute;n en compa&ntilde;&iacute;a de los dem&aacute;s.</li>
+<li>Rango emocional, tambi&eacute;n conocido como Neurosis o Reacciones naturales, es la magnitud a la que son sensibles las emociones de una persona a su entorno.</li>
+<li>Apertura es el punto hasta el que una persona est&aacute; abierta a experimentar actividades diversas.</li>
+</ol>
+</span></div>
+   </li>
+ </ul>
+
               </div>
+
             </div>
+
         </div>
-
-
 
 <div class="divider"></div>
 
@@ -85,12 +127,35 @@
   <section>
       <div id="container"></div>
   </section>-->
+
+
   <section>
       <div id="container3"></div>
   </section>
+
+<ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
+   <li>
+     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+     <div class="collapsible-body"><img src="./img/necesidadCuadro.png" alt="Necesidades" height="700" width="550"></div>
+   </li>
+ </ul>
+
+<br>
+<br>
+<br>
+<br>
+<br>
   <section>
       <div id="container2"></div>
   </section>
+
+<ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
+   <li>
+     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+     <div class="collapsible-body"><img src="./img/valorCuadro.png" alt="Valores" height="450" width="550"></div>
+   </li>
+ </ul>
+<br>
 
 
     </div>
@@ -109,42 +174,61 @@
   </footer>
 
 
-  <!-- jQuery Library -->
-  <script type="text/javascript" src="js/plugins/jquery-1.11.2.min.js"></script>
+<!-- jQuery Library -->
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+ 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
+
+
+
   <!--materialize js-->
   <script type="text/javascript" src="js/materialize.min.js"></script>
+
+
   <!--scrollbar-->
   <script type="text/javascript" src="js/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
+
   <!-- chartist -->
   <script type="text/javascript" src="js/plugins/chartist-js/chartist.min.js"></script>
+
 
   <!-- chartjs -->
   <script type="text/javascript" src="js/plugins/chartjs/chart.min.js"></script>
   <script type="text/javascript" src="js/plugins/chartjs/chartjs-sample-chart.js"></script>
 
+
   <!--plugins.js - Some Specific JS codes for Plugin Settings-->
   <script type="text/javascript" src="js/plugins.min.js"></script>
+
+
   <!--custom-script.js - Add your own theme custom JS-->
   <script type="text/javascript" src="js/custom-script.js"></script>
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
+
+  <!--  Scripts-->
+  
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
   <script src="https://cdnjs.com/libraries/Chart.js"></script>
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/treemap.js"></script>
   <script src="https://code.highcharts.com/highcharts-more.js"></script>
   <script src="https://code.highcharts.com/modules/export-data.js"></script>
-  <script src="scripts/charting.js"></script>
- 
-  <!--<script src="scripts/twitter.js"></script>-->
 
+
+
+<!-- Custom Scripts -->
+
+  <script src="scripts/charting.js"></script>
+  <script src="scripts/twitter.js"></script>
   <script src="scripts/otherFunctionality.js"></script>
 
   </body>
