@@ -5,6 +5,7 @@ Aplicación web que incorpora el servicio de Personality Insights de IBM, proyec
 
 Modo de  uso:
 - Entrar con cualquier correo y dar click en entrar
+- Una vez ingresado, la sesion dura 30 minutos. Mas tardar de eso, sera necesario ingresar de nuevo en la aplicacion web.
 - En la pagina a la que se acaba de ingresar, seguir una de las siguientes dos opciones:
   1) Copiar y pegar un ensayo de al menos 5000 palabras y dar click en "Analizar"
   2) Dar click en el boton "Analisis por twitter", para despues escribir la cuenta de twitter que desea que se analice y el idioma en que
