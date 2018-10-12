@@ -13,7 +13,7 @@
 
 
   <!-- jQuery Library -->
- 
+
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
@@ -59,9 +59,9 @@
       <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-top:-5px; margin-left:32px; height:40px">
 
 <span style="position:absolute; margin-top: -2px; margin-left:10px; font-size: 17px;">Conectado como: <span id = "email" style=" margin-top: 10px; margin-left: 10px; font-size: 17px;"></span></span>
-     <ul style="position:absolute; top:0px;  left:1079px;"  class="right hide-on-med-and-down">
-        <li><a style="font-size:16px"; href="/Informacion"><i class="material-icons left">info_outline</i>Más información</a></li>
-        <li><a href="/LogoutAction"><i class="material-icons left">exit_to_app</i></a></li>
+     <ul class="right hide-on-med-and-down">
+        <li><a href="/Informacion"><i class="material-icons left">info_outline</i>Más información</a></li>
+        <li><a href="/LogoutAction"><i class="material-icons left">exit_to_app</i>Cerrar Sesión</a></li>
 
     </div>
   </nav>
@@ -93,8 +93,9 @@
       <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkform(event)">
         <div class="row" style="padding:40px 40px 10px 40px; margin-bottom: 10px">
           <div class="input-field card-content col s12">
-            <textarea id="textarea2" name = "textAreaContent" class="materialize-textarea" data-length="1000"></textarea>
-            <label for="textarea2">Escribe aquí</label>
+            <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
+            <!--<textarea id="textarea2" name = "textAreaContent" class="materialize-textarea" data-length="1000"></textarea>-->
+            <!--<label for="textarea2">Escribe aquí</label>-->
           </div>
         </div>
         <div class="card-action">
@@ -102,9 +103,9 @@
         <a href="#" class="deep-purple-text text-darken-1">Subir desde computadora</a>
 -->
       <!-- Si son menos de 500 palabras, no deja dar click -->
-      <input type="submit" class="deep-purple darken-1 btn" value="Analizar">
+      <input type="submit" class="deep-purple darken-1 btn" value="Analizar Ensayo">
 
-<a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+      <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
 
       </div>
       </form>
@@ -123,16 +124,19 @@
 
 
 <form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
-    
+
     <label>Cuenta de Twitter:</label>
     <input type="text" id="account" name = "twitterAccount" required>
     <select id = "accountLang" name = "tweetsLang">
-	  <option value = "en">Ingles</option>
-       <option value = "es">Espanol</option>
+	  <option value = "en">Inglés</option>
+       <option value = "es">Español</option>
     </select>
     <br>
-    <input type="submit" value ="Analizar">
-    <button>Cerrar</button>
+    <p class="nota">*Se necesitan mínimo 200 tweets sin incluir retweets.</p>
+    <div id="botonesTwitter">
+      <input class="deep-purple darken-1 btn" type="submit" value ="Analizar">
+      <button class="red darken-2 btn" id="close-twitter">Cerrar</button>
+    </div>
 </form>
 
 
@@ -168,7 +172,7 @@
 <!-- jQuery Library -->
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
- 
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
@@ -201,7 +205,7 @@
 
 
   <!--  Scripts-->
-  
+
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>

@@ -13,7 +13,7 @@
 
 
   <!-- jQuery Library -->
- 
+
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
@@ -38,26 +38,29 @@
 
 <body>
 
-<nav class="nav-extended purple darken-4">
-    <div class="nav-wrapper">
-      <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-top:8px; margin-bottom:8px; margin-left:32px; height:40px">
-      <span style="margin-left:7px; font-size: 17px;">Conectado como: <span id = "email" style=" margin-left: 10px; font-size: 17px;"></span></span>
-      <ul style="position:absolute; top:0px;  left:1079px;"  class="right hide-on-med-and-down">
-        <li><a style="font-size:16px"; href="/Informacion"><i class="material-icons left">info_outline</i>Más información</a></li>
-        <li><a href="/LogoutAction"><i class="material-icons left">exit_to_app</i></a></li>
-      </ul>
-    </div>
-  </nav>
-
+  <nav class="nav-extended purple darken-4">
+      <div class="nav-wrapper">
+        <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-top:8px; margin-bottom:8px; margin-left:32px; height:40px">
+        <span style="margin-left:7px; font-size: 17px;">Conectado como: <span id = "email" style=" margin-left: 10px; font-size: 17px;"></span></span>
+        <ul  class="right hide-on-med-and-down">
+          <li><a href="/Informacion"><i class="material-icons left">info_outline</i>Más información</a></li>
+          <li><a href="/LogoutAction"><i class="material-icons left">exit_to_app</i>Cerrar Sesión</a></li>
+        </ul>
+      </div>
+    </nav>
+  <div class="titulo col s12">
+    <h1 class="header center black-text text-black" style="font-size: 30px">Análisis de personalidad con inteligencia artificial</h1>
+    <h4 class="center blue-grey-text text-lighten-4" style="font-size: 30px">Apoyado con el servicio de IBM Watson Personality Insights</h4>
+  </div>
 
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
-        <br><br>
+        <!--<br><br>
         <h1 class="header center black-text text-black" style="font-size: 30px">Análisis de personalidad con inteligencia artificial</h1>
-        <h4 class="center blue-grey-text text-lighten-4" style="font-size: 30px">Apoyado con el servicio de IBM Watson Personality insight</h4>
+        <h4 class="center blue-grey-text text-lighten-4" style="font-size: 30px">Apoyado con el servicio de IBM Watson Personality Insights</h4>-->
         <div class="row" style="padding-top:3.2em">
             <div class="col s12 m6" >
-                <h4 class="header">Descripción</h4>
+                <h4 class="header" id="headerDescripcion">Descripción</h4>
                 <div class="row" style="font-size:17px">
                   <div class="col s12 m8 l8">
                     <p id="insightsDescription">Cargando...</p>
@@ -65,102 +68,111 @@
 
                 </div>
                 <div style="width:24em;">
-                    <a href="/Subir" style="margin-bottom:16px; font-size:14px;"class="waves-effect waves-light purple darken-4 btn">Subir de nuevo<i class="material-icons right">cloud_upload</i></a>
-                    <a id= "twitterButton" style="font-size:14px;"class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+                    <a href="/Subir" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Realizar nuevo análisis</a>
+                  <!--  <a id= "twitterButton" style="font-size:14px;"class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a> -->
 
-<form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
-    
-    <label>Cuenta de Twitter:</label>
-    <input type="text" id="account" name = "twitterAccount" required>
-    <select id = "accountLang" name = "tweetsLang">
-	  <option value = "en">Ingles</option>
-       <option value = "es">Espanol</option>
-    </select>
-    <br>
-    <input type="submit" value ="Analizar">
-    <button>Cerrar</button>
-</form>
+                    <form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
 
+                        <label>Cuenta de Twitter:</label>
+                        <input type="text" id="account" name = "twitterAccount" required>
+                        <select id = "accountLang" name = "tweetsLang">
+                    	     <option value = "en">Inglés</option>
+                           <option value = "es">Español</option>
+                        </select>
+                        <br>
+                        <p class="nota">*Se necesitan mínimo 200 tweets sin incluir retweets.</p>
+                        <div id="botonesTwitter">
+                          <input class="deep-purple darken-1 btn" type="submit" value ="Analizar">
+                          <button class="red darken-2 btn" id="close-twitter">Cerrar</button>
+                        </div>
+                    </form>
                 </div>
-            </div>
+            </div> <!--final div lado izquierdo, descripcion-->
 
             <div class="col s12 m12 l6">
               <div class="sample-chart-wrapper">
                 <canvas id="myChart" height="260"></canvas>
-			
-
-<ul class="collapsible" style="border: 2px solid #842ca0;">
-   <li>
-     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
-     <div class="collapsible-body"><span>
-Describe de forma general, c&oacute;mo interact&uacute;a una persona con el mundo.
-El modelo incluye cinco dimensiones primarias:
-<br>
-<br>
-<ol>
-<li> Simpat&iacute;a es la tendencia de una persona a ser compasiva y cooperadora con los dem&aacute;s.</li>
-<li>Responsabilidad es la tendencia de una persona a actuar de forma organizada o meticulosa.</li>
-<li>Extraversi&oacute;n es la tendencia de una persona a buscar la estimulaci&oacute;n en compa&ntilde;&iacute;a de los dem&aacute;s.</li>
-<li>Rango emocional, tambi&eacute;n conocido como Neurosis o Reacciones naturales, es la magnitud a la que son sensibles las emociones de una persona a su entorno.</li>
-<li>Apertura es el punto hasta el que una persona est&aacute; abierta a experimentar actividades diversas.</li>
-</ol>
-</span></div>
-   </li>
- </ul>
-
+                <ul class="collapsible" style="border: 2px solid #842ca0;">
+                   <li>
+                     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+                     <div class="collapsible-body"><span>
+                      Describe de forma general, c&oacute;mo interact&uacute;a una persona con el mundo.
+                      El modelo incluye cinco dimensiones primarias:
+                      <br>
+                      <br>
+                      <ol>
+                      <li> Simpat&iacute;a es la tendencia de una persona a ser compasiva y cooperadora con los dem&aacute;s.</li>
+                      <li>Responsabilidad es la tendencia de una persona a actuar de forma organizada o meticulosa.</li>
+                      <li>Extraversi&oacute;n es la tendencia de una persona a buscar la estimulaci&oacute;n en compa&ntilde;&iacute;a de los dem&aacute;s.</li>
+                      <li>Rango emocional, tambi&eacute;n conocido como Neurosis o Reacciones naturales, es la magnitud a la que son sensibles las emociones de una persona a su entorno.</li>
+                      <li>Apertura es el punto hasta el que una persona est&aacute; abierta a experimentar actividades diversas.</li>
+                      </ol>
+                      </span></div>
+                   </li>
+                 </ul>
               </div>
+            </div><!--final div lado derecho, chart y detalles-->
+        </div><!--final div de row-->
 
-            </div>
-
-        </div>
-
-<div class="divider"></div>
+      <!--  <div class="divider"></div>-->
 
 <!--Radar Chart-->
-<div id="chartjs-radar-chart" class="section">
+<!--El script para construir todos los charts esta en scripts > charting.js-->
+          <div id="chartjs-radar-chart" class="section"></div>
+        <br><br>
+    </div><!--div de container-->
+  </div><!--div no pad bot-->
 
-</div>
-      <br><br>
+<!--titulo seccion necesidades-->
+  <div class="contenedorTitulo">
+    <div class="titulo2">
+      Necesidades
     </div>
+    <div class="inferior"></div>
   </div>
-<!-- ESTA SECCION NO DESPLIEGA NADA
-  <section>
-      <div id="container"></div>
-  </section>-->
-
-
+  <!--graph de necesidades-->
   <section>
       <div id="container3"></div>
   </section>
 
-<ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
-   <li>
-     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
-     <div class="collapsible-body"><img src="./img/necesidadCuadro.png" alt="Necesidades" height="700" width="550"></div>
-   </li>
- </ul>
+  <!--detalles de necesidades-->
+  <ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
+    <li>
+      <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+      <div class="collapsible-body"><img src="./img/necesidadCuadro.png" alt="Necesidades" height="700" width="550"></div>
+    </li>
+  </ul>
 
-<br>
-<br>
-<br>
-<br>
-<br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <div class="contenedorTitulo">
+    <div class="titulo2">
+      Valores
+    </div>
+    <div class="inferior"></div>
+  </div>
+  <!--graph valores-->
   <section>
       <div id="container2"></div>
   </section>
 
-<ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
-   <li>
-     <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
-     <div class="collapsible-body"><img src="./img/valorCuadro.png" alt="Valores" height="450" width="550"></div>
-   </li>
- </ul>
-<br>
+  <!--detalles de valores-->
+  <ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
+     <li>
+       <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+       <div class="collapsible-body"><img src="./img/valorCuadro.png" alt="Valores" height="450" width="540"></div>
+     </li>
+   </ul>
+  <br>
 
 
-    </div>
+    <!--</div>
     <br><br>
-  </div>
+  </div>-->
 
   <footer class="page-footer  purple darken-4">
     <div class="footer-copyright">
@@ -177,7 +189,7 @@ El modelo incluye cinco dimensiones primarias:
 <!-- jQuery Library -->
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
- 
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
@@ -210,7 +222,7 @@ El modelo incluye cinco dimensiones primarias:
 
 
   <!--  Scripts-->
-  
+
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>

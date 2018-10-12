@@ -6,6 +6,146 @@
  * Made By MaterializeCSS.com
  */
 
+/*amarillo: #ffca28*/
+
+/*NAV BAR ********************************/
+nav ul li a{
+  font-size:16px;
+}
+
+nav ul li a i{
+  margin-right: 3px !important;
+}
+
+nav ul li a:hover {
+  text-decoration: none;
+  color: #cfd8dc;
+  cursor: pointer;
+}
+
+/***************Titulo de index.html***************/
+.titulo{
+  background-color: #60409c;
+  padding: 20px;
+}
+
+/**Titulos para secciones necesidades y valores*/
+.titulo2{
+  background-color: #60409c;
+  padding: 40px;
+  color: white;/*#cfd8dc;*/
+  text-align: center;
+  font-size: 2em;
+}
+
+.contenedorTitulo .inferior{
+  background-color: /*#ffca28;*/ #64628d;
+  height: 20px;
+
+}
+
+.contenedorTitulo{
+  margin-bottom: 30px;
+    box-shadow: 1px 1px 3px/*<- blur*/ #7c7a9e /*color*/;
+}
+
+
+/*Botones nav bar*/
+.btn.focus, .btn:focus, .btn:hover{
+  color: #cfd8dc!important;
+}
+
+/***TEXT AREA PARA SUBIR EL ENSAYO****/
+#textarea2{
+  height: 250px;
+  outline: none;
+  border-bottom: 4px solid purple;
+  border-top: 4px solid purple;
+  border-right: none;
+  border-left: none;
+  resize: none;
+  padding: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  -webkit-transition-duration: 0.4s;
+}
+
+textarea::-webkit-input-placeholder {
+color: #7d868e;
+}
+
+textarea:-moz-placeholder { /* Firefox 18- */
+color: #7d868e;
+}
+
+textarea::-moz-placeholder {  /* Firefox 19+ */
+color: #7d868e;
+}
+
+textarea:-ms-input-placeholder {
+color: #7d868e;
+}
+
+/****ESTILOS DIALOG PARA ANALIZAR POR TWITTER */
+.ui-dialog-titlebar{
+  background-color: #49187e !important;
+  color: white !important;
+}
+
+.ui-widget-header{
+  background-image: none!important;
+}
+
+/*para cambiar el estilo del close icon del dialog*/
+button.ui-button-icon-only.ui-dialog-titlebar-close{
+  background-image: url(../img/close-icon-large.png)!important;
+  background-size: 20px 20px;
+  background-position: center;
+  background-color: #49187e;
+  border: 1px solid #49187e;
+}
+
+.nota{
+  font-size: 12px;
+}
+
+/*para cambiar el estilo del close icon del dialog*/
+span.ui-button-icon.ui-icon.ui-icon-closethick{
+  background-image:  none;
+}
+
+ul.dropdown-content.select-dropdown li span {
+    color: black; /* no need for !important :) */
+    font-size: 1em;
+}
+
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid black;
+  box-shadow: 0 1px 0 0 #000;
+}
+
+.dialogTwitter{
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+#twitterButton{
+    vertical-align: center;
+  }
+
+#botonesTwitter{
+  margin-top: 35px!important;
+  width: 70%;
+  margin: 5px auto 5px auto;
+  text-align: center;
+}
+
+/*Rayita abajo de descripcion*/
+#headerDescripcion{
+  border-bottom: 2px solid #f8e300;
+  padding-bottom: 2px;
+}
+/*******************************/
 .icon-block {
   padding: 0 15px;
 }
