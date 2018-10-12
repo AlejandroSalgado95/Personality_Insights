@@ -18,11 +18,11 @@
         [ // Responsabilidad //
             "Dependiente, responsable, de confianza, educado, considerado", // High-High //
             "No pretencioso, moderado", // High-Low //
-            "Firme, estricto, rigido", // Low-High //
-            "Inprudente, incooperativo, no fidedigno, desconfiado, desconsiderado"  // Low-Low //
+            "Firme, estricto, rígido", // Low-High //
+            "Imprudente, incooperativo, no fidedigno, desconfiado, desconsiderado"  // Low-Low //
         ],
         [ // Extrovertido //
-            "Social, energetico, entusiasta, comunicativo, viva", // High-High //
+            "Social, energético, entusiasta, comunicativo, viva", // High-High //
             "Pacifico, humilde, sumiso, timido, obediente", // High-Low //
             "Dogmatico, fuerte, dominador, jactancioso, mandón", // Low-High //
             "Escéptico, preocupado por otros, solitario, poco comunicativo, antisocial"  // Low-Low //
@@ -31,19 +31,19 @@
             "Emocional, crédulo, afectivo, sensible, blando", // High-High //
             "Paciente, relajado, poco exigente, aterrizado", // High-Low //
             "Temperamental, irritable, peleonero, impaciente, gruñón", // Low-High //
-            "frío, insensible, poco afectivo, desapasionado"  // Low-Low //
+            "Frío, insensible, poco afectivo, desapasionado"  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Tdealista, diplomatico, profundo, tactico, genial", // High-High //
+            "Idealista, diplomatico, profundo, táctico, genial", // High-High //
             "Simple, dependiente", // High-Low //
-            "Perspicaz, ecentrico, individual", // Low-High //
-            "Grocero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
+            "Perspicaz, excéntrico, individual", // Low-High //
+            "Grosero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
         ]
     ],
     [ // Responsabilidad //
         [ // Cordialidad/Amabilidad //
             "Ayudador, cooperativo, considerado, respetuoso, cortés", // High-High //
-            "Firme, estricto, rigido", // High-Low //
+            "Firme, estricto, rígido", // High-Low //
             "No pretencioso, moderado", // Low-High //
             "Desconsiderado, descortés, desconfianza, falta de cooperación, inconsciente"  // Low-Low //
         ],
@@ -57,34 +57,34 @@
             "Activo, Competitivo, persistente, ambicioso, útil", // High-High //
             "Reservado, serio, discreto, cauteloso, con principios", // High-Low //
             "Bullicioso, dañoso, exhibicionista, gregario, expresivo", // Low-High //
-            "indirecto, apagado, lento, impersistente, vago"  // Low-Low //
+            "Indirecto, apagado, lento, impersistente, vago"  // Low-Low //
         ],
         [ // Estabilidad Emocional //
             "Particular, nervioso", // High-High //
-            "Racional, objetivo, estable, logico, decisivo", // High-Low //
+            "Racional, objetivo, estable, lógico, decisivo", // High-Low //
             "Compulsivo, curioso, egoísta, olvidadizo, impulsivo", // Low-High //
             "Informal, sencillo"  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Analitico, perceptivo, informativo, articulado, digno", // High-High //
+            "Analítico, perceptivo, informativo, articulado, digno", // High-High //
             "Convencional, tradicional", // High-Low //
             "Poco convencional, peculiar", // Low-High //
-            "Poca imaginación, imprudente, ilogico, inmaduro, desorganizado"  // Low-Low //
+            "Poca imaginación, imprudente, ilógico, inmaduro, desorganizado"  // Low-Low //
         ]
     ],
 
     [ // Extrovertido //
         [ // Cordialidad/Amabilidad //
-            "Efervecente, feliz, amigable,alegre,  jovial", // High-High //
+            "Efervescente, feliz, amigable, alegre, jovial", // High-High //
             "Obstinado, abrupto, crudo, peleonero, rudo", // High-Low //
-            "Corazon de pollo, agradable, servicial, humilde, indulgente,", // Low-High //
-            "Cinico, preocupado por otros, reclusivo, desprende fácil de cosas, impersonal"  // Low-Low //
+            "Corazón de pollo, agradable, servicial, humilde, indulgente,", // Low-High //
+            "Cínico, preocupado por otros, reclusivo, se desprende fácil de cosas, impersonal"  // Low-Low //
         ],
         [ // Responsabilidad //
             "Ambicioso, alerta, firme, útil, competitivo", // High-High //
             "Revoltoso, bullicioso, temerario, despreocupado, demostrativo ", // High-Low //
             "Cauteloso, confiado, puntual, formal, ahorrativo", // Low-High //
-            "Indeciso, sin objetivo, evasivo, débil, sin ambioción"  // Low-Low //
+            "Indeciso, sin objetivo, evasivo, débil, sin ambición"  // Low-Low //
         ],
         [ // Extrovertido //
             "N/A", // High-High //
@@ -94,35 +94,35 @@
         ],
         [ // Estabilidad Emocional //
             "Excitable, expresivo, coqueto, explosivo, extravagante", // High-High //
-            "Inconciente, cansado, infatigable", // High-Low //
+            "Inconsciente, cansado, infatigable", // High-Low //
             "Guardado, inseguro, displicente, reservado, pesimista", // Low-High //
             "Modesto, sin excitación, plácido, tranquilo"  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
             "Mundano, teatral, elocuente, inquisitivo, intenso", // High-High //
             "Rollero, inmoral, pomposo", // High-Low //
-            "Introspectivo, mediatico, contemplador, auto-observador, interiorizado", // Low-High //
-            "Predesible, sin imaginación, sombrío, apático, poco aventurero"  // Low-Low //
+            "Introspectivo, mediático, contemplador, auto-observador, interiorizado", // Low-High //
+            "Predecible, sin imaginación, sombrío, apático, poco aventurero"  // Low-Low //
         ]
     ],
     [ // Estabilidad Emocional //
         [ // Cordialidad/Amabilidad //
-            "Sentimental, afectivo, sensible, blando, apasionado ", // High-High //
+            "Sentimental, afectivo, sensible, blando, apasionado", // High-High //
             "Criticón, egoísta, malhumorado, antagonista, enojón", // High-Low //
             "Generoso, placentero, tolerante, pacifico, flexible", // Low-High //
             "Insensible, sin afecto, sin pasión, frío"  // Low-Low //
         ],
         [ // Responsabilidad //
             "Particular, nervioso", // High-High //
-            "Atolondrado, inconsistente, erratico, egoísta, olvidadizo, impulsivo", // High-Low //
-            "Completo, estable, consistente, disciplinado, logico", // Low-High //
+            "Atolondrado, inconsistente, errático, egoísta, olvidadizo, impulsivo", // High-Low //
+            "Completo, estable, consistente, disciplinado, lógico", // Low-High //
             "Informal, sencillo"  // Low-Low //
         ],
         [ // Extrovertido //
             "Versátil, expresivo, coqueto, explosivo, extravagante", // High-High //
             "Guardado, reservado, pesimista, cobarde", // High-Low //
-            "Confiado, audaz, asegura, desihibido, valiente", // Low-High //
-            "modesto, sin excitación, plácido, tranquilo, sedado"  // Low-Low //
+            "Confiado, audaz, seguro, desihibido, valiente", // Low-High //
+            "Modesto, sin excitación, plácido, tranquilo, sedado"  // Low-Low //
         ],
         [ // Estabilidad Emocional //
             "N/A", // High-High //
@@ -132,34 +132,34 @@
         ],
         [ // Apertura a la Experiencia //
             "Apasionado, excitado, sensual", // High-High //
-            "Molestable, irritable, aprensivo", // High-Low //
+            "Fácil de molestar, irritable, aprensivo", // High-Low //
             "Creativo, inteligente, versátil, perspicaz, inventivo", // Low-High //
             "Imperturbable, insensible"  // Low-Low //
         ]
     ],
     [ // Apertura a la Experiencia //
         [ // Cordialidad/Amabilidad //
-            "Genial, tactico, diplomatico, profundo, idealista", // High-High //
-            "Perspicaz, excentrico, individual", // High-Low //
+            "Genial, táctico, diplomático, profundo, idealista", // High-High //
+            "Perspicaz, excéntrico, individual", // High-Low //
             "Simple, dependiente", // Low-High //
-            "Grocero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
+            "Grosero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
         ],
         [ // Responsabilidad //
-            "Sofisticado, perfeccionsta, industrioso, digno, refinado", // High-High //
+            "Sofisticado, perfeccionista, industrioso, digno, refinado", // High-High //
             "Poco convencional, peculiar", // High-Low //
             "Convencional, tradicional", // Low-High //
-            "Imprudente, ilogico, inmaduro, desorganizado, flojo"  // Low-Low //
+            "Imprudente, ilógico, inmaduro, desorganizado, flojo"  // Low-Low //
         ],
         [ // Extrovertido //
-            "Expresivo, honesto, dramatico, espontáneo, ingenioso", // High-High //
-            "Introspectivo, mediatico, contemplador, auto-observador, interiorizado", // High-Low //
+            "Expresivo, honesto, dramático, espontáneo, ingenioso", // High-High //
+            "Introspectivo, mediático, contemplador, auto-observador, interiorizado", // High-Low //
             "Rollero, inmoral, pomposo", // Low-High //
-            "Predesible, sombrío, dócil, pasivo, apático, poco aventurero"  // Low-Low //
+            "Predecible, sombrío, dócil, pasivo, apático, poco aventurero"  // Low-Low //
         ],
         [ // Estabilidad Emocional //
             "Apasionado, excitado, sensual", // High-High //
             "Creativo, inteligente, versátil, perspicaz, muy sentido", // High-Low //
-            "Molestable, irritable, aprensivo", // Low-High //
+            "Fácil de molestar, irritable, aprensivo", // Low-High //
             "Imperturbable, insensible"  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
@@ -171,6 +171,7 @@
     ]
 ];
 
+//funcion para obtener la descripcion de la persona
     function getImportantText(big5Array) {
 
       console.log ("Entro en la funcion GETIMPORTANTTEXT");
@@ -182,6 +183,7 @@
     	var arrHiLo = [0,0];
 
     	// llena un arreglo para ver si cada valor es alto o bajo
+      //arrHilo especifica para cada big_5, si es alto (1 si es mayor a 0.5) o bajo (0, si es menor a 0.5)
     	for (var i = 0; i < big5Array.length; i++) {
     		if (big5Array[i].percentile > 0.5)
     			arrHiLo[i] = 1;
@@ -201,6 +203,8 @@
         var high2 = 0;
 
     	// Separa las posiciones del mas grande y segundo mas grande
+      //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
+      //top2 tiene el segundo que mas se aleja
         for (var i = 0; i < big5Array.length; i++) {
           if (big5Array[i] > high1) {
             high2 = high1;
@@ -214,14 +218,14 @@
         }
 
     	//Define las posiciones de la matriz 3D
-    	if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){
+    	if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){ //top1 es High y top2 es high = 0
     		pair = 0;
-    	} else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {
+    	} else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {// top1 es High y top2 es low = 1
     		pair = 1;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {
-    		pair = 2;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {
+    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {//low low = 3 (!debe ser 3 segun el arreglo de arriba)
     		pair = 3;
+    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {//low high = 2
+    		pair = 2;
     	}
 
 	//Regresa los 3 valores
@@ -275,26 +279,15 @@
                     var myChart = new Chart(ctx, {
                         type: 'radar',
                         data: {
-                            labels: ["Apertura", "Consciencia", "Extroversión", "Amabilidad", "Estabilidad emocional"],
+                            labels: ["Apertura", "Conciencia", "Extroversión", "Amabilidad", "Estabilidad emocional"],
                             datasets: [{
                                 label: 'Personalidad',
                                 data: [openness, conscientiousness, extraversion, agreeableness, emotionalRange],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255,99,132,1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
+                                backgroundColor: "rgba(209,31,59,0.2)",
+                                borderColor: "rgba(209,31,59,0.6)",
+                                pointBackgroundColor: "rgba(209,31,59,0.6)",
+                                pointBorderColor:  "rgba(209,31,59,0.6)",
+                                pointRadius: 4,
                                 borderWidth: 1
                             }]
                         },
@@ -395,7 +388,7 @@
                       },
 
                       title: {
-                        text: 'Necesidades'
+                        text: ''
                       },
 
                       xAxis: {

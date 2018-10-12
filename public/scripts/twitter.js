@@ -11,14 +11,15 @@ $(document).ready(function() {
     });*/
 
 	$("#twitterButton").click (function(e){
-
 		e.preventDefault();
         console.log("Twitter button was pressed");
 		showForm();
-		
-		
 	});
 
+	//para cerrar el dialog de twitter con el boton cerrar
+	$("#close-twitter").on("click", function(e){
+	 	$( "#myForm" ).dialog("close");
+	});
 
 });
 
@@ -27,15 +28,17 @@ function showForm() {
 
     //$( "#myForm" ).dialog('open');
 
-    
+
     $( "#myForm" ).dialog({
+    width: 400,
+    height: 300,
+		dialogClass: 'dialogTwitter',
     open: function() {
         // On open, hide the original submit button
         //$( this ).find( "[type=submit]" ).hide();
         console.log("dialog box opened");
     }});
 
-    
     /*
 	$( "#myForm" ).dialog({
     open: function() {
