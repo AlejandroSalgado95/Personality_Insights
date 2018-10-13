@@ -74,13 +74,13 @@ function loginPage(response, postData, cookieJar) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function infoPage(response, postData, cookieJar) {
 	console.log("Request handler 'info' was called.");
-  
+
   //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
-  
+
   var someDate = new Date();
-  someDate.setTime(someDate.getTime() + (30*60*1000) ) ; 
+  someDate.setTime(someDate.getTime() + (30*60*1000) ) ;
 
   cookieJar.set( "email", id_user , { httpOnly: false, expires: someDate} );
   cookieJar.set( "name", name , { httpOnly: false, expires: someDate} );
@@ -106,10 +106,10 @@ function infoPage(response, postData, cookieJar) {
 function homePage(response, postData, cookieJar) {
   console.log("Request handler 'principal' was called.");
   //Get name and email from login (for execution of queries)
-  
+
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
-  
+
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
 
@@ -164,12 +164,12 @@ function homePage(response, postData, cookieJar) {
 
 function uploadPage(response, postData, cookieJar) {
   console.log("Request handler 'upload' was called.");
-  
+
 
   //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
-  
+
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
 
@@ -219,14 +219,14 @@ function piServiceEssay(response,postData, cookieJar){
   console.log("'piService' handler received: ");
 
   console.log(querystring.parse(postData).textAreaContent);
-
+  console.log(querystring.parse(postData));
 
 
 
   //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
-  
+
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
 
@@ -241,7 +241,8 @@ function piServiceEssay(response,postData, cookieJar){
       content: querystring.parse(postData).textAreaContent,
       // Content-type: el tipo de archivo a analizar, en este caso plain text
       content_type: 'text/plain;charset=utf-8',
-      content_language: 'en'
+      content_language: querystring.parse(postData).idiomaEnsayo //idioma ensayo es el valor del select del idioma
+      //en
   };
 
   // Envia los parametros a Personality Insights
@@ -260,7 +261,7 @@ function piServiceEssay(response,postData, cookieJar){
         if(exists){
             console.log("yes file exists");
             //fs.appendFile('analisisPI.txt', json);
-              
+
              fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
                 if (err) return console.log(err);
                 console.log('successfully appended new line');
@@ -390,7 +391,7 @@ console.log("Request handler 'piService' was called.");
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
 
-  
+
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
 
@@ -404,7 +405,7 @@ console.log("Request handler 'piService' was called.");
   var tweetsLang = querystring.parse(postData).tweetsLang;
 
 
-  var twitterContent = { 
+  var twitterContent = {
                   "contentItems":[]
                 };
 
@@ -424,11 +425,11 @@ console.log("Request handler 'piService' was called.");
   var somethingWrong = false;
 
   async.whilst(
-      //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets 
+      //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
       function() { return (twitterContent.contentItems.length < 1000 && !notEnoughTweets && !somethingWrong); },
 
       function(outerCallback) {
-             
+
             if (count > 1){
 
                  twitterParams = { screen_name: twitterAccount,
@@ -442,7 +443,7 @@ console.log("Request handler 'piService' was called.");
 
             //Obten los ultimos 200 tweets que se han posteado en la cuenta de twitter
            twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
-            
+
               if (!error) {
                   //Empaqueta los tweets obtenidos en un arreglo de objetos (la configuracion de dicho arreglo es estrictamente especifica para poder ser analizado por el servicio PI de IBM)
                   async.forEachOf(tweets, function (element, index, innerCallback){
@@ -463,14 +464,14 @@ console.log("Request handler 'piService' was called.");
                      tweetNum = tweetNum + 1;
                      twitterContent.contentItems.push(contentItem);
                      innerCallback();
-                      
+
                    }, function(err){
-                        
+
                         //Terminado de empaquetar esta ronda de tweets, manda a llamar otra iteracion (para ir a buscar otros 200 tweets)
                         console.log(err);
                         console.log('finished packing all the tweets for round ' + count);
                         console.log('Amount of tweets packed until now:' + twitterContent.contentItems.length);
-                        count = count + 1; 
+                        count = count + 1;
                         latestMaxID = twitterContent.contentItems[twitterContent.contentItems.length - 1].id;
 
                         if (latestMaxID != pastMaxID){
@@ -481,7 +482,7 @@ console.log("Request handler 'piService' was called.");
 
                         outerCallback();
 
-                      } 
+                      }
                   );
 
               } else { //Si, por ejemplo, la cuenta de twitter a analizar no existe
@@ -556,7 +557,7 @@ console.log("Request handler 'piService' was called.");
                       });
                     }
               });
-           
+
           } else {
 
 
@@ -586,7 +587,7 @@ console.log("Request handler 'piService' was called.");
                       if(exists){
                           console.log("yes file exists");
                           //fs.appendFile('analisisPI.txt', json);
-                            
+
                            fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
                               if (err) return console.log(err);
                               console.log('successfully appended new line');
@@ -718,7 +719,7 @@ function lastProfile(response,postData, cookieJar){
   //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
   var name = cookieJar.get("name");
   var id_user = cookieJar.get("email");
-  
+
   var someDate = new Date();
   someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
  //someDate.toISOString().replace(/T/, ' ').replace(/\..+/, '')
@@ -735,9 +736,9 @@ function lastProfile(response,postData, cookieJar){
       currentID = arraySelects[0].id;
       pool.query("select trait_id, percentile from trait t join profile p ON t.profile_id = p.id where (t.trait_id = 'big5_agreeableness' or t.trait_id = 'big5_openness' or t.trait_id = 'big5_conscientiousness' or t.trait_id = 'big5_extraversion' or t.trait_id = 'big5_neuroticism') and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
           if (err) throw err;
-          
+
           //response.writeHead(200, {"Content-Type": "application/json"});
-          
+
           var personalityArray = [];
           for (var i = 0;i < result.length; i++) {
               personalityArray.push({percentile: result[i].percentile});
@@ -788,7 +789,7 @@ function loginAction(response, postData, cookieJar){
   if (id_user != null){
 
     var someDate = new Date();
-    someDate.setTime(someDate.getTime() + (30*60*1000) ) ; 
+    someDate.setTime(someDate.getTime() + (30*60*1000) ) ;
     //someDate =  someDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
     //document.cookie = 'foo=bar;path=/;expires='+d.toGMTString()+';';
 
@@ -798,7 +799,7 @@ function loginAction(response, postData, cookieJar){
 
     var nextPage = "";
 
-    //Busca si el usuario tiene guardado en la base de datos algun analisis de personalidad 
+    //Busca si el usuario tiene guardado en la base de datos algun analisis de personalidad
     pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
               if(err) throw err;
               //console.log(rows == NULL);
@@ -839,7 +840,7 @@ function loginAction(response, postData, cookieJar){
                 });
               }
       });
-      
+
       //Si el usario NO escribio su correo, NO se le permite entrar en la app web (se le entrega de nuevo la view para iniciar sesion)
     } else {
 
@@ -866,7 +867,7 @@ function loginAction(response, postData, cookieJar){
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Funcion para terminar la sesion del usuario en la app web (se DESTRUYEN sus cookies), 
+//Funcion para terminar la sesion del usuario en la app web (se DESTRUYEN sus cookies),
 //Nota: Para poder realizar esta accion el usuario tiene que tener una sesion activa
 //Nota: Al realizar esta accion, se entrega al usuario la pagina para iniciar sesion
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -877,11 +878,11 @@ function logoutAction(response, postData, cookieJar){
 
   //Destruye la cookie dandole una fecha de expiracion ya pasada
   var someDate = new Date();
-  someDate.setTime(someDate.getTime() - 500000 ) ; 
+  someDate.setTime(someDate.getTime() - 500000 ) ;
 
   cookieJar.set( "email", "dummy", { httpOnly: false, expires: someDate} );
   cookieJar.set( "name", "dummy" , { httpOnly: false, expires: someDate} );
-  
+
   fs.readFile('./public/login.html', null, function (error,data){
 
     if (error){
@@ -902,13 +903,13 @@ function logoutAction(response, postData, cookieJar){
 function pdfService(response,postData, pathname){
   //console.log("Request handler 'pdfService' was called. The file " + querystring.parse(postData).pdfNombre + " was requested.");
   console.log("Request handler 'pdfService' was called. The file " + pathname + " was requested.");
- 
+
   //var nombrePDF =  querystring.parse(postData).pdfNombre;
   //var fullpath = './documents' +  nombrePDF;
   var fullpath = './documents' +  pathname;
 
 
- 
+
   var file = fs.createReadStream(fullpath);
   var stat = fs.statSync(fullpath);
   response.setHeader('Content-Length', stat.size);
@@ -1032,4 +1033,3 @@ exports.lastProfile = lastProfile;
 exports.cssContent = cssContent;
 exports.jsContent = jsContent;
 exports.pngContent = pngContent;
-
