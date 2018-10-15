@@ -195,25 +195,6 @@ function uploadPage(response, postData, cookieJar) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function piServiceEssay(response,postData, cookieJar){
   console.log("Request handler 'piService' was called.");
   console.log("'piService' handler received: ");
@@ -377,9 +358,15 @@ function piServiceTwitter(response,postData, cookieJar){
 /*
 console.log("Request handler 'piService' was called.");
  twitter.get('oauth/authorize', {force_login:true}, function(error, tweets, response) {
-
-
  });*/
+
+ /*Detalles por los cuales quizas y no de exacto al IBM waton:
+  1.Se repiten tweets despues de cada ronda
+  2. Se analizan una cantidad diferente de tweets
+  3. No se filtran los tweets que no son en el idioma especificado*/
+
+ //API twitter how to do  a request:  https://developer.twitter.com/en/docs/tweets/timelines/overview
+ //How to transverse a timeline https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
 
 //Pendientes: 1) llamar recursivamente la funcion de obtener timeline para asi obtener 200 tweets con cada request hasta llegar a 1000 tweets
 //            2) Preguntar al usuario en que idioma estan los tweets
@@ -426,22 +413,28 @@ console.log("Request handler 'piService' was called.");
 
   async.whilst(
       //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
-      function() { return (twitterContent.contentItems.length < 1000 && !notEnoughTweets && !somethingWrong); },
+      function() { return (twitterContent.contentItems.length < 1280 && !notEnoughTweets && !somethingWrong); },
 
       function(outerCallback) {
 
+            //cuando ya se han leido tweets tienes que empezar a leer desde el max_id para abajo para no leer los mismos tweets, por eso se incluye
+            //max_id
             if (count > 1){
-
                  twitterParams = { screen_name: twitterAccount,
-                        count:200,
-                        include_rts: false,
+                        //Importante: el count solo es un maximo, no necesariamente vas a obtener 200 tweets ya que primero se cuentan los 200 tweets y //luego se quitan los rts y los replies
+                        count:200, //maximo puedes retrieve 200 tweets por request
+                        include_rts: false, //no tomar en cuenta retweets
                         exclude_replies : false,
                         trim_user: true,
                         max_id : latestMaxID
                       };
             }
 
-            //Obten los ultimos 200 tweets que se han posteado en la cuenta de twitter
+
+          // console.log("TWIITER CONTENT:");
+          // for (var i = 0; i < twitterContent.contentItems.length )
+
+            //Obten un maximo de 200 tweets (los mas recientes) que se han posteado en la cuenta de twitter
            twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
 
               if (!error) {
@@ -578,7 +571,8 @@ console.log("Request handler 'piService' was called.");
                     response.end();
                   } else{
 
-
+                    console.log("WORD COUNT");
+                      console.log(json.word_count);
                      var valuesFromSelection = [];
                      var id = 0;
 
