@@ -367,6 +367,7 @@ console.log("Request handler 'piService' was called.");
 
  //API twitter how to do  a request:  https://developer.twitter.com/en/docs/tweets/timelines/overview
  //How to transverse a timeline https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
+ // https://medium.com/ibm-watson-tutorials/getting-started-with-ibm-watson-personality-insights-2-3d0260926519
 
 //Pendientes: 1) llamar recursivamente la funcion de obtener timeline para asi obtener 200 tweets con cada request hasta llegar a 1000 tweets
 //            2) Preguntar al usuario en que idioma estan los tweets
@@ -413,7 +414,7 @@ console.log("Request handler 'piService' was called.");
 
   async.whilst(
       //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
-      function() { return (twitterContent.contentItems.length < 1280 && !notEnoughTweets && !somethingWrong); },
+      function() { return (twitterContent.contentItems.length < 500 && !notEnoughTweets && !somethingWrong); },
 
       function(outerCallback) {
 
@@ -431,8 +432,6 @@ console.log("Request handler 'piService' was called.");
             }
 
 
-          // console.log("TWIITER CONTENT:");
-          // for (var i = 0; i < twitterContent.contentItems.length )
 
             //Obten un maximo de 200 tweets (los mas recientes) que se han posteado en la cuenta de twitter
            twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
@@ -917,27 +916,6 @@ function pdfService(response,postData, pathname){
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

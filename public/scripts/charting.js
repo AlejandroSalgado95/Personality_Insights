@@ -279,7 +279,7 @@
                     var myChart = new Chart(ctx, {
                         type: 'radar',
                         data: {
-                            labels: ["Apertura", "Conciencia", "Extroversión", "Amabilidad", "Estabilidad emocional"],
+                            labels: ["Apertura", "Responsabilidad", "Extroversión", "Amabilidad", "Rango emocional"],
                             datasets: [{
                                 label: 'Personalidad',
                                 data: [openness, conscientiousness, extraversion, agreeableness, emotionalRange],
@@ -374,79 +374,158 @@
 
 
                     // BUBBLE CHARTS STARTS //
-                    //Grafica de necesidades
-                    Highcharts.chart('container3', {
-
-                      chart: {
-                        type: 'bubble',
-                        plotBorderWidth: 1,
-                        zoomType: 'xy'
-                      },
-
-                      legend: {
-                        enabled: false
-                      },
-
-                      title: {
-                        text: ''
-                      },
-
-                      xAxis: {
-                        gridLineWidth: 0,
-                        tickColor: 'white',
-                        title: null,
-                        labels: {
-                          enabled: false
-                        },
-                      },
-
-                      yAxis: {
-                        gridLineWidth: 0,
-                        startOnTick: false,
-                        endOnTick: false,
-                        title: null,
-                        labels: {
-                          enabled: false
-                        },
-                        maxPadding: 0.2,
-                      },
-
-                      tooltip: {
-                        useHTML: true,
-                        headerFormat: '<table>',
-                        pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
-                          '<tr><th></th><td>{point.z}%</td></tr>',
-                        footerFormat: '</table>',
-                        followPointer: true
-                      },
-
-                      plotOptions: {
-                        series: {
-                          dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                          }
+                    //Grafica de necesidades   var myChart = new Chart
+                    var necesidades = document.getElementById("container3").getContext('2d');
+                    var myChart = new Chart(necesidades, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Retos", "Reservarse", "Curiosidad", "Emoción", "Armonía", "Ideales", "Libertad", "Amor", "Práctico", "Expresivo", "Estabilidad","Estructura"],
+                        datasets: [{
+                            label: 'Necesidades',
+                            data: [dataReceived.needs[0].percentile*100,
+                                   dataReceived.needs[1].percentile*100,
+                                   dataReceived.needs[2].percentile*100,
+                                   dataReceived.needs[3].percentile*100,
+                                   dataReceived.needs[4].percentile*100,
+                                   dataReceived.needs[5].percentile*100,
+                                   dataReceived.needs[6].percentile*100,
+                                   dataReceived.needs[7].percentile*100,
+                                   dataReceived.needs[8].percentile*100,
+                                   dataReceived.needs[9].percentile*100,
+                                   dataReceived.needs[10].percentile*100,
+                                   dataReceived.needs[11].percentile*100],
+                            backgroundColor: ['rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                            'rgba(125, 187, 195, 0.7)',
+                                /*'#FF5722',
+                                '#FF9800',
+                                '#E91E63',
+                                '#FFEB3B',
+                                '#673AB7',
+                                '#8BC34A',
+                                '#4CAF50',
+                                '#009688',
+                                '#00BCD4',
+                                '#9C27B0',
+                                '#2196F3',
+                                '#3F51B5',*/
+                            ],
+                            borderColor: [ 'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                            'rgba(125, 187, 195, 1)',
+                                /*'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'*/
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
                         }
-                      },
+                    }
+                });
 
-                      series: [{
-                        data: [
-                          { x: 0, y: 0, z: Math.round(dataReceived.needs[0].percentile*100), name: 'Retos', country: 'Retos', color: '#FF5722' },
-                          { x: 5, y: 5, z: Math.round(dataReceived.needs[1].percentile*100), name: 'Reservarse', country: 'Reservarse', color: '#FF9800'},
-                          { x: 10, y: 10, z: Math.round(dataReceived.needs[2].percentile*100), name: 'Curiosidad', country: 'Curiosidad', color: '#E91E63'},
-                          { x: 15, y: 15, z: Math.round(dataReceived.needs[3].percentile*100), name: 'Emoción', country: 'Emoción', color: '#FFEB3B'},
-                          { x: 20, y: 20, z: Math.round(dataReceived.needs[4].percentile*100), name: 'Armonía', country: 'Armonía', color: '#673AB7'},
-                          { x: 25, y: 25, z: Math.round(dataReceived.needs[5].percentile*100), name: 'Ideales', country: 'Ideales', color: '#8BC34A'},
-                          { x: 30, y: 30, z: Math.round(dataReceived.needs[6].percentile*100), name: 'Libertad', country: 'Libertad', color: '#4CAF50'},
-                          { x: 35, y: 35, z: Math.round(dataReceived.needs[7].percentile*100), name: 'Amor', country: 'Amor', color: '#009688'},
-                          { x: 40, y: 40, z: Math.round(dataReceived.needs[8].percentile*100), name: 'Práctico', country: 'Práctico', color: '#00BCD4'},
-                          { x: 45, y: 45, z: Math.round(dataReceived.needs[9].percentile*100), name: 'Expresivo', country: 'Expresivo', color: '#9C27B0'},
-                          { x: 50, y: 50, z: Math.round(dataReceived.needs[10].percentile*100), name: 'Estabilidad', country: 'Estabilidad', color: '#2196F3'},
-                          { x: 55, y: 55, z: dataReceived.needs[11].percentile*100, name: 'Estructura', country: 'Estructura', color: '#3F51B5'},
-                        ]
-                      }]
 
-                    });
+
+                    // Highcharts.chart('container3', {
+                    //
+                    //   chart: {
+                    //     type: 'bubble',
+                    //     plotBorderWidth: 1,
+                    //     zoomType: 'xy'
+                    //   },
+                    //
+                    //   legend: {
+                    //     enabled: false
+                    //   },
+                    //
+                    //   title: {
+                    //     text: ''
+                    //   },
+                    //
+                    //   xAxis: {
+                    //     gridLineWidth: 0,
+                    //     tickColor: 'white',
+                    //     title: null,
+                    //     labels: {
+                    //       enabled: false
+                    //     },
+                    //   },
+                    //
+                    //   yAxis: {
+                    //     gridLineWidth: 0,
+                    //     startOnTick: false,
+                    //     endOnTick: false,
+                    //     title: null,
+                    //     labels: {
+                    //       enabled: false
+                    //     },
+                    //     maxPadding: 0.2,
+                    //   },
+                    //
+                    //   tooltip: {
+                    //     useHTML: true,
+                    //     headerFormat: '<table>',
+                    //     pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+                    //       '<tr><th></th><td>{point.z}%</td></tr>',
+                    //     footerFormat: '</table>',
+                    //     followPointer: true
+                    //   },
+                    //
+                    //   plotOptions: {
+                    //     series: {
+                    //       dataLabels: {
+                    //         enabled: true,
+                    //         format: '{point.name}'
+                    //       }
+                    //     }
+                    //   },
+                    //
+                    //   series: [{
+                    //     data: [
+                    //       { x: 0, y: 0, z: Math.round(dataReceived.needs[0].percentile*100), name: 'Retos', country: 'Retos', color: '#FF5722' },
+                    //       { x: 5, y: 5, z: Math.round(dataReceived.needs[1].percentile*100), name: 'Reservarse', country: 'Reservarse', color: '#FF9800'},
+                    //       { x: 10, y: 10, z: Math.round(dataReceived.needs[2].percentile*100), name: 'Curiosidad', country: 'Curiosidad', color: '#E91E63'},
+                    //       { x: 15, y: 15, z: Math.round(dataReceived.needs[3].percentile*100), name: 'Emoción', country: 'Emoción', color: '#FFEB3B'},
+                    //       { x: 20, y: 20, z: Math.round(dataReceived.needs[4].percentile*100), name: 'Armonía', country: 'Armonía', color: '#673AB7'},
+                    //       { x: 25, y: 25, z: Math.round(dataReceived.needs[5].percentile*100), name: 'Ideales', country: 'Ideales', color: '#8BC34A'},
+                    //       { x: 30, y: 30, z: Math.round(dataReceived.needs[6].percentile*100), name: 'Libertad', country: 'Libertad', color: '#4CAF50'},
+                    //       { x: 35, y: 35, z: Math.round(dataReceived.needs[7].percentile*100), name: 'Amor', country: 'Amor', color: '#009688'},
+                    //       { x: 40, y: 40, z: Math.round(dataReceived.needs[8].percentile*100), name: 'Práctico', country: 'Práctico', color: '#00BCD4'},
+                    //       { x: 45, y: 45, z: Math.round(dataReceived.needs[9].percentile*100), name: 'Expresivo', country: 'Expresivo', color: '#9C27B0'},
+                    //       { x: 50, y: 50, z: Math.round(dataReceived.needs[10].percentile*100), name: 'Estabilidad', country: 'Estabilidad', color: '#2196F3'},
+                    //       { x: 55, y: 55, z: dataReceived.needs[11].percentile*100, name: 'Estructura', country: 'Estructura', color: '#3F51B5'},
+                    //     ]
+                    //   }]
+                    //
+                    // });
 
                     // BUBBLE CHARTS ENDS //
 
