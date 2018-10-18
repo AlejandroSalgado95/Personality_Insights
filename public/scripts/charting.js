@@ -7,6 +7,43 @@
     var agreeableness;
     var emotionalRange;
 
+
+    var valores = {
+      "value_conservation" :
+      {
+        "muyBajo": "Te importa más seguir tu propio camino que seguir las tradiciones.",
+        "bajo": "No te motivan mucho las tradiciones, sigues más tu propio camino que el de otros.",
+        "alto": "Tienes cierto respesto hacia las tradiciones y hacia los grupos a los que perteneces.",
+        "muyAlto": "Tienes mucho respeto hacia las tradiciones y hacia los grupos a los que perteneces, por lo que generalmente sigues su guía."
+      },
+      "value_openness_to_change":
+      {
+        "muyBajo": "Recibes de buena manera que otras personas dirigan tus actividades.",
+        "bajo": "No te molesta que otras personas dirijan tus actividades." ,
+        "alto": "Prefieres establecer tus propias metas y dirigir tus actividades en vez de que otras personas lo hagan.",
+        "muyAlto": "Te gusta establecer tus propias metas para decidir cómo alcanzarlas mejor."
+      },
+      "value_hedonism": {
+        "muyBajo": "Te motivan las actividades que tengan un propósito más grande que el simple deleite personal",
+        "bajo": "Prefieres actividades con un propósito más grande que el simple deleite personal." ,
+        "alto": "Te gusta realizar actividades por deleite personal sin que tengan ningún propósito especial.",
+        "muyAlto": "Tienes gran motivación por disfrutar la vida en su plenitud."
+      },
+      "value_self_enhancement":
+      {
+        "muyBajo": "Generalmente tomas decisiones sin considerar cómo muestran tus talentos.",
+        "bajo": "A veces tomas decisiones sin considerar cómo muestran tus talentos.",
+        "alto": "Tienes cierta motivación para mejorarte a ti mismo y desmostrar que eres una persona capaz.",
+        "muyAlto": "Buscas oportunidades para mejorarte a ti mismo y para demostrar que eres una persona capaz."
+      },
+      "value_self_transcendence": {
+        "muyBajo": "Crees que las personas pueden encargarse de sus propios asuntos sin ayuda",
+        "bajo": "A veces consideras que las personas pueden encargarse de sus propios asuntos sin ayuda.",
+        "alto": "Consideras algo importante cuidar de las personas que te rodean.",
+        "muyAlto": "Crees que es importante cuidar de las personas que te rodean."
+      }
+    };
+
     var myArrF = [
     [ // Cordialidad/Amabilidad //
         [ // Cordialidad/Amabilidad //
@@ -16,36 +53,36 @@
             "N/A"  // Low-Low //
         ],
         [ // Responsabilidad //
-            "Dependiente, responsable, de confianza, educado, considerado", // High-High //
-            "No pretencioso, moderado", // High-Low //
-            "Firme, estricto, rígido", // Low-High //
-            "Imprudente, incooperativo, no fidedigno, desconfiado, desconsiderado"  // Low-Low //
+            "Tiendes a ser una persona responsable, considerada, y algo dependiente.", // High-High // responsable, de confianza, educado, considerado
+            "Tiendes a ser una persona modesta.", // High-Low //
+            "Tiendes a ser una persona estricta y firme.", // Low-High //
+            "Tiendes a ser una persona un poco incooperativa y desconfiada."  // Low-Low //
         ],
         [ // Extrovertido //
-            "Social, energético, entusiasta, comunicativo, viva", // High-High //
-            "Pacifico, humilde, sumiso, timido, obediente", // High-Low //
-            "Dogmatico, fuerte, dominador, jactancioso, mandón", // Low-High //
-            "Escéptico, preocupado por otros, solitario, poco comunicativo, antisocial"  // Low-Low //
+            "Tiendes a ser una persona social, energética, entusiasta, comunicativa, y viva.", // High-High //
+            "Tiendes a ser una persona agradable, conmovible, humilde y servicial.", // High-Low //
+            "Tiendes a ser una persona astuta y de cierta manera manipuladora.", // Low-High //
+            "Tiendes a ser una persona preocupada por otros, no muy comunicativa, y algo escéptica."  // Low-Low //
         ],
         [ // Estabilidad Emocional //
-            "Emocional, crédulo, afectivo, sensible, blando", // High-High //
-            "Paciente, relajado, poco exigente, aterrizado", // High-Low //
-            "Temperamental, irritable, peleonero, impaciente, gruñón", // Low-High //
-            "Frío, insensible, poco afectivo, desapasionado"  // Low-Low //
+            "Tiendes a ser una persona apasionada, romántica y sentimental.", // High-High //
+            "Tiendes a ser paciente, relajado, poco exigente, y aterrizado", // High-Low //
+            "Tiendes a ser una persona algo crítica y exigente.", // Low-High //
+            "Tiendes a ser una persona un poco desapasionada e insensible."  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Idealista, diplomatico, profundo, táctico, genial", // High-High //
-            "Simple, dependiente", // High-Low //
-            "Perspicaz, excéntrico, individual", // Low-High //
-            "Grosero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
+            "Tiendes a ser una persona amistosa, idealista, diplomática y profunda.", // High-High //
+            "Tiendes a ser simple y depender un poco de los demás.", // High-Low //
+            "Tiendes a ser una persona perspicaz, excéntrica, e individualista.", // Low-High //
+            "Tiendes a ser una persona un poco cerrada y algo áspera."  // Low-Low //
         ]
     ],
-    [ // Responsabilidad //
+    [ // Responsabilidad //  Me quede en 11577: respnsabilidad_minus_agreeableness_minus
         [ // Cordialidad/Amabilidad //
-            "Ayudador, cooperativo, considerado, respetuoso, cortés", // High-High //
-            "Firme, estricto, rígido", // High-Low //
-            "No pretencioso, moderado", // Low-High //
-            "Desconsiderado, descortés, desconfianza, falta de cooperación, inconsciente"  // Low-Low //
+            "Tiendes a ser una persona responsable, confiable y considerada.", // High-High //
+            "Tiendes a ser una persona estricta y algo rígida.", // High-Low //
+            "Tiendes a ser una persona modesta y no pretenciosa.", // Low-High //
+            "Tiendes a ser una persona un poco desconfiada y incooperativa."  // Low-Low //
         ],
         [ // Responsabilidad //
             "N/A", // High-High //
@@ -54,37 +91,37 @@
             "N/A"  // Low-Low //
         ],
         [ // Extrovertido //
-            "Activo, Competitivo, persistente, ambicioso, útil", // High-High //
-            "Reservado, serio, discreto, cauteloso, con principios", // High-Low //
-            "Bullicioso, dañoso, exhibicionista, gregario, expresivo", // Low-High //
-            "Indirecto, apagado, lento, impersistente, vago"  // Low-Low //
+            "Tiendes a ser una persona activa, competitiva, persistente, y ambiciosa.", // High-High //
+            "Tiendes a ser una persona reservada, discreta, cautelosa, y con principios.", // High-Low //
+            "Tiendes a ser una persona expresiva, gregaria, y bulliciosa.", // Low-High //
+            "Tiendes a ser una persona un poco apagada e impersistente."  // Low-Low //
         ],
         [ // Estabilidad Emocional //
-            "Particular, nervioso", // High-High //
-            "Racional, objetivo, estable, lógico, decisivo", // High-Low //
-            "Compulsivo, curioso, egoísta, olvidadizo, impulsivo", // Low-High //
-            "Informal, sencillo"  // Low-Low //
+            "Tiendes a ser una persona algo nerviosa y particular.", // High-High //
+            "Tiendes a ser una persona racional, con objetivos, estable, y decisiva.", // High-Low //
+            "Tiendes a ser una persona curiosa, un poco impulsiva y olvidadiza.", // Low-High //
+            "Tiendes a ser una persona informal y sencilla."  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Analítico, perceptivo, informativo, articulado, digno", // High-High //
-            "Convencional, tradicional", // High-Low //
-            "Poco convencional, peculiar", // Low-High //
-            "Poca imaginación, imprudente, ilógico, inmaduro, desorganizado"  // Low-Low //
+            "Tiendes a ser una persona perfeccionista, perceptiva, sofisticada y articulada.", // High-High //
+            "Tiendes a ser una persona convencional y tradicional.", // High-Low //
+            "Tiendes a ser una persona poco convencional y algo peculiar.", // Low-High //
+            "Tiendes a ser una persona algo desorganizada e ilógica."  // Low-Low // Poca imaginación, imprudente, ilógico, inmaduro, desorganizado
         ]
     ],
 
     [ // Extrovertido //
         [ // Cordialidad/Amabilidad //
-            "Efervescente, feliz, amigable, alegre, jovial", // High-High //
-            "Obstinado, abrupto, crudo, peleonero, rudo", // High-Low //
-            "Corazón de pollo, agradable, servicial, humilde, indulgente,", // Low-High //
-            "Cínico, preocupado por otros, reclusivo, se desprende fácil de cosas, impersonal"  // Low-Low //
+            "Tiendes a ser una persona efervescente, feliz, amigable, y jovial.", // High-High //
+            "Tiendes a ser una persona astuta, dominante y algo abrupta.", // High-Low //
+            "Tiendes a ser una persona sensible, agradable, servicial, humilde, y algo indulgente.", // Low-High //
+            "Tiendes a desprenderte fácil de cosas y eres una persona un poco cínica."  // Low-Low //Cínico, preocupado por otros, reclusivo, impersonal
         ],
         [ // Responsabilidad //
-            "Ambicioso, alerta, firme, útil, competitivo", // High-High //
-            "Revoltoso, bullicioso, temerario, despreocupado, demostrativo ", // High-Low //
-            "Cauteloso, confiado, puntual, formal, ahorrativo", // Low-High //
-            "Indeciso, sin objetivo, evasivo, débil, sin ambición"  // Low-Low //
+            "Tiendes a ser una persona persistente, firme, activa, y competitiva.", // High-High //
+            "Tiendes a ser una persona despreocupada, temeraria, y algo bulliciosa.", // High-Low //  Revoltoso, bullicioso, temerario, despreocupado, demostrativo
+            "Tiendes a ser una persona cautelosa, confiada, puntual, formal, y ahorrativa.", // Low-High //
+            "Tiendes a ser una persona un poco floja y sin ambiciones."  // Low-Low //
         ],
         [ // Extrovertido //
             "N/A", // High-High //
@@ -93,36 +130,36 @@
             "N/A"  // Low-Low //
         ],
         [ // Estabilidad Emocional //
-            "Excitable, expresivo, coqueto, explosivo, extravagante", // High-High //
-            "Inconsciente, cansado, infatigable", // High-Low //
-            "Guardado, inseguro, displicente, reservado, pesimista", // Low-High //
-            "Modesto, sin excitación, plácido, tranquilo"  // Low-Low //
+            "Tiendes a ser una persona extravagante, expresiva, coqueta, y algo explosiva.", // High-High // Excitable, expresivo, coqueto, explosivo, extravagante
+            "Tiendes a ser una persona cansada y un poco inconsciente.", // High-Low // infatigable
+            "Tiendes a ser una persona guardada, reservada, y un poco pesimista.", // Low-High //Guardado, inseguro, displicente, reservado, pesimista
+            "Tiendes a ser una persona calmada, plácida, y modesta."  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Mundano, teatral, elocuente, inquisitivo, intenso", // High-High //
-            "Rollero, inmoral, pomposo", // High-Low //
-            "Introspectivo, mediático, contemplador, auto-observador, interiorizado", // Low-High //
-            "Predecible, sin imaginación, sombrío, apático, poco aventurero"  // Low-Low //
+            "Tiendes a ser una persona teatral, elocuente, inquisitiva, y algo intensa.", // High-High //Mundano, teatral, elocuente, inquisitivo, intenso
+            "Tiendes a ser una persona sin escrúpulos y algo pomposa.", // High-Low //
+            "Tiendes a ser una persona interiorizada, pensativa, y guiada por sus propios valores.", // Low-High //
+            "Tiendes a ser una persona predecible y no te gustan mucho las aventuras."  // Low-Low // sin imaginación, sombrío, apático, poco aventurero
         ]
     ],
     [ // Estabilidad Emocional //
         [ // Cordialidad/Amabilidad //
-            "Sentimental, afectivo, sensible, blando, apasionado", // High-High //
-            "Criticón, egoísta, malhumorado, antagonista, enojón", // High-Low //
-            "Generoso, placentero, tolerante, pacifico, flexible", // Low-High //
-            "Insensible, sin afecto, sin pasión, frío"  // Low-Low //
+            "Tiendes a ser una persona apasionada, sentimental, afectiva, y sensible.", // High-High //sensible, blando, apasionado
+            "Tiendes a ser una persona un poco impaciente y temperamental.", // High-Low //
+            "Tiendes a ser una persona pacífica, generosa y paciente.", // Low-High //
+            "Tiendes a ser una persona un poco desapasionada e insensible."  // Low-Low //
         ],
         [ // Responsabilidad //
-            "Particular, nervioso", // High-High //
-            "Atolondrado, inconsistente, errático, egoísta, olvidadizo, impulsivo", // High-Low //
-            "Completo, estable, consistente, disciplinado, lógico", // Low-High //
-            "Informal, sencillo"  // Low-Low //
+            "Tiendes a ser una persona algo nerviosa y particular.", // High-High //
+            "Tiendes a ser una persona olvidadiza, un poco incosistente e impulsiva.", // High-Low //Atolondrado, inconsistente, errático, egoísta, olvidadizo, impulsivo
+            "Tiendes a ser una persona estable, consistente, disciplinada, y lógica.", // Low-High //
+            "Tiendes a ser una persona informal y sencilla."  // Low-Low //
         ],
         [ // Extrovertido //
-            "Versátil, expresivo, coqueto, explosivo, extravagante", // High-High //
-            "Guardado, reservado, pesimista, cobarde", // High-Low //
-            "Confiado, audaz, seguro, desihibido, valiente", // Low-High //
-            "Modesto, sin excitación, plácido, tranquilo, sedado"  // Low-Low //
+            "Tiendes a ser una persona extravagante, coqueta, y algo explosiva.", // High-High //
+            "Tiendes a ser reservado, auto-crítico, y algo temeroso.", // High-Low //
+            "Tiendes a ser una persona confiada, audaz, segura, y valiente.", // Low-High //
+            "Tiendes a ser una persona modesta, tranquila, y algo plácida."  // Low-Low //
         ],
         [ // Estabilidad Emocional //
             "N/A", // High-High //
@@ -131,36 +168,36 @@
             "N/A"  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
-            "Apasionado, excitado, sensual", // High-High //
-            "Fácil de molestar, irritable, aprensivo", // High-Low //
-            "Creativo, inteligente, versátil, perspicaz, inventivo", // Low-High //
-            "Imperturbable, insensible"  // Low-Low //
+            "Tiendes a ser una persona apasionada y sensual.", // High-High //
+            "Tiendes a ser una persona un poco aprensiva y fácil de molestar.", // High-Low //
+            "Tiendes a ser una persona versátil, creativa, intelectual, perspicaz e inventiva.", // Low-High //
+            "Tiendes a ser una persona imperturbable y algo insensible."  // Low-Low //
         ]
     ],
     [ // Apertura a la Experiencia //
         [ // Cordialidad/Amabilidad //
-            "Genial, táctico, diplomático, profundo, idealista", // High-High //
-            "Perspicaz, excéntrico, individual", // High-Low //
-            "Simple, dependiente", // Low-High //
-            "Grosero, sin tacto, brusco, mente pequeña, cruel"  // Low-Low //
+            "Tiendes a ser una persona diplomática, profunda, e idealista.", // High-High //
+            "Tiendes a ser una persona perspicaz, excéntrica, e individualista.", // High-Low //
+            "Tiendes a depender un poco de los demás.", // Low-High //
+            "Tienes a ser un poco cerrado y brusco."  // Low-Low //
         ],
         [ // Responsabilidad //
-            "Sofisticado, perfeccionista, industrioso, digno, refinado", // High-High //
-            "Poco convencional, peculiar", // High-Low //
-            "Convencional, tradicional", // Low-High //
-            "Imprudente, ilógico, inmaduro, desorganizado, flojo"  // Low-Low //
+            "Tiendes a ser una persona analítica, perceptiva, e informativa.", // High-High //
+            "Tiendes a ser una persona poco convencional y algo peculiar.", // High-Low //
+            "Tiendes a ser una persona convencional y tradicional.", // Low-High //
+            "Tiendes a ser una persona laxa, temeraria, y un poco inmadura."  // Low-Low //
         ],
         [ // Extrovertido //
-            "Expresivo, honesto, dramático, espontáneo, ingenioso", // High-High //
-            "Introspectivo, mediático, contemplador, auto-observador, interiorizado", // High-Low //
-            "Rollero, inmoral, pomposo", // Low-High //
-            "Predecible, sombrío, dócil, pasivo, apático, poco aventurero"  // Low-Low //
+            "Tiendes a ser una persona expresiva, honesta, espontánea, ingeniosa, y algo dramática.", // High-High //
+            "Tiendes a ser una persona introspectiva, mediática, auto-observadora, e interiorizada.", // High-Low //
+            "Tiendes a ser una persona sin escrúpulos y algo pomposa.", // Low-High //
+            "Tiendes a ser una persona predecible y no suelen gustarte las aventuras."  // Low-Low //
         ],
         [ // Estabilidad Emocional //
-            "Apasionado, excitado, sensual", // High-High //
-            "Creativo, inteligente, versátil, perspicaz, muy sentido", // High-Low //
-            "Fácil de molestar, irritable, aprensivo", // Low-High //
-            "Imperturbable, insensible"  // Low-Low //
+            "Tiendes a ser una persona apasionada y sensual.", // High-High //
+            "Tiendes a ser una persona creativa, intelectual y versátil.", // High-Low //
+            "Tiendes a ser una persona algo fácil de molestar.", // Low-High // irritable, aprensivo
+            "Tiendes a ser una persona imperturbable y algo insensible."  // Low-Low //
         ],
         [ // Apertura a la Experiencia //
             "N/A", // High-High //
@@ -171,16 +208,40 @@
     ]
 ];
 
-//funcion para obtener la descripcion de la persona
-    function getImportantText(big5Array) {
+function getTwoMoreRelevant(arrDatos){
+  top1 = 0;
+  top2 = 0;
+  var high1 = 0;
+  var high2 = 0;
 
-      console.log ("Entro en la funcion GETIMPORTANTTEXT");
-      console.log (big5Array);
+  // Separa las posiciones del mas grande y segundo mas grande
+  //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
+  //top2 tiene el segundo que mas se aleja
+    for (var i = 0; i < arrDatos.length; i++) {
+      if (arrDatos[i] > high1) {
+        high2 = high1;
+  	    top2 = top1;
+
+        high1 = arrDatos[i];
+  	    top1 = i;
+  } else if (arrDatos[i] > high2) {
+        high2 = arrDatos[i];
+  	    top2 = i;
+      }
+    }
+
+  return [top1, top2]; //regresa la posicion de los valores mas relevantes
+}
+
+//funcion para obtener la descripcion de la persona
+    function getImportantText(dataReceived) {
+
+      var big5Array = dataReceived.personality;
+
     	var top1;
     	var top2;
-    	//0: (H,H) 1: (H,L) 2: (L,L) 3: (L,H)
-    	var pair;
-    	var arrHiLo = [0,0];
+      var pair;
+      var arrHiLo = [0,0];
 
     	// llena un arreglo para ver si cada valor es alto o bajo
       //arrHilo especifica para cada big_5, si es alto (1 si es mayor a 0.5) o bajo (0, si es menor a 0.5)
@@ -193,38 +254,45 @@
     	//modifica los valores para ser distancia del punto medio
     	for (var i = 0; i < big5Array.length; i++) {
     		big5Array[i] = Math.abs(big5Array[i].percentile - 0.5);
-    		console.log(big5Array[i]);
     	}
 
-    	top1 = 0;
-    	top2 = 0;
+///***************************************************************
+    	// top1 = 0;
+    	// top2 = 0;
+      // var high1 = 0;
+      // var high2 = 0;
+      //
+    	// // Separa las posiciones del mas grande y segundo mas grande
+      // //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
+      // //top2 tiene el segundo que mas se aleja
+      //   for (var i = 0; i < big5Array.length; i++) {
+      //     if (big5Array[i] > high1) {
+      //       high2 = high1;
+    	// 	top2 = top1;
+      //       high1 = big5Array[i];
+    	// 	top1 = i;
+      //     } else if (big5Array[i] > high2) {
+      //       high2 = big5Array[i];
+    	// 	top2 = i;
+      //     }
+      //   }
+      //
+      //   // 0 = H-H,  1 = H-L, 2 = L-H,  3 = L-L
 
-        var high1 = 0;
-        var high2 = 0;
-
-    	// Separa las posiciones del mas grande y segundo mas grande
-      //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
-      //top2 tiene el segundo que mas se aleja
-        for (var i = 0; i < big5Array.length; i++) {
-          if (big5Array[i] > high1) {
-            high2 = high1;
-    		top2 = top1;
-            high1 = big5Array[i];
-    		top1 = i;
-          } else if (big5Array[i] > high2) {
-            high2 = big5Array[i];
-    		top2 = i;
-          }
-        }
+///***************************************************************
+      let response = getTwoMoreRelevant(big5Array);
+      top1 = response[0];
+      top2 = response[1];
+///***************************************************************
 
     	//Define las posiciones de la matriz 3D
-    	if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){ //top1 es High y top2 es high = 0
+    	if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){ //H-H
     		pair = 0;
-    	} else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {// top1 es High y top2 es low = 1
+    	} else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {// H-L
     		pair = 1;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {//low low = 3 (!debe ser 3 segun el arreglo de arriba)
+    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {//L-L
     		pair = 3;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {//low high = 2
+    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {// L-H
     		pair = 2;
     	}
 
@@ -271,7 +339,7 @@
                     var emotionalRange = dataReceived.personality[3].percentile;
                     var openness = dataReceived.personality[4].percentile;
 
-                    $("#insightsDescription").html(getImportantText(dataReceived.personality));
+                    $("#insightsDescription").html(getImportantText(dataReceived));
 
 
 
