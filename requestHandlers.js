@@ -17,10 +17,10 @@ var async = require("async");  //modulo para utilizar funciones asincronas (ej. 
 
 var pool  = mysql.createPool({
  connectionLimit : 10,
- host            : 'den1.mysql1.gear.host',
- user            : 'proyectoflashdb',
- password        : 'Mostla12345?',
- database        : 'proyectoflashdb'
+ host            : 'den1.mysql2.gear.host',
+ user            : 'piapplicationdb',
+ password        : 'yell0wC@t',
+ database        : 'piapplicationdb'
 });
 
 
@@ -747,7 +747,7 @@ function lastProfile(response,postData, cookieJar){
                   if (err) throw err;
                   var valuesArray = [];
                   for (var i = 0;i < result.length; i++) {
-                      valuesArray.push({percentile: result[i].percentile});
+                      valuesArray.push({percentile: result[i].percentile, trait_id: result[i].trait_id});
                   }
 
                   var json = JSON.stringify({

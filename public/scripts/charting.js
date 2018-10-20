@@ -7,13 +7,35 @@
     var agreeableness;
     var emotionalRange;
 
+    // top1 = 0;
+    // top2 = 0;
+    // var high1 = 0;
+    // var high2 = 0;
+    //
+    // // Separa las posiciones del mas grande y segundo mas grande
+    // //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
+    // //top2 tiene el segundo que mas se aleja
+    //   for (var i = 0; i < big5Array.length; i++) {
+    //     if (big5Array[i] > high1) {
+    //       high2 = high1;
+    // 	top2 = top1;
+    //       high1 = big5Array[i];
+    // 	top1 = i;
+    //     } else if (big5Array[i] > high2) {
+    //       high2 = big5Array[i];
+    // 	top2 = i;
+    //     }
+    //   }
+    //
+    //   // 0 = H-H,  1 = H-L, 2 = L-H,  3 = L-L
+
 
     var valores = {
       "value_conservation" :
       {
         "muyBajo": "Te importa más seguir tu propio camino que seguir las tradiciones.",
         "bajo": "No te motivan mucho las tradiciones, sigues más tu propio camino que el de otros.",
-        "alto": "Tienes cierto respesto hacia las tradiciones y hacia los grupos a los que perteneces.",
+        "alto": "Tienes cierto respeto hacia las tradiciones y hacia los grupos a los que perteneces.",
         "muyAlto": "Tienes mucho respeto hacia las tradiciones y hacia los grupos a los que perteneces, por lo que generalmente sigues su guía."
       },
       "value_openness_to_change":
@@ -24,7 +46,7 @@
         "muyAlto": "Te gusta establecer tus propias metas para decidir cómo alcanzarlas mejor."
       },
       "value_hedonism": {
-        "muyBajo": "Te motivan las actividades que tengan un propósito más grande que el simple deleite personal",
+        "muyBajo": "Te motivan las actividades que tengan un propósito más grande que el simple deleite personal.",
         "bajo": "Prefieres actividades con un propósito más grande que el simple deleite personal." ,
         "alto": "Te gusta realizar actividades por deleite personal sin que tengan ningún propósito especial.",
         "muyAlto": "Tienes gran motivación por disfrutar la vida en su plenitud."
@@ -37,7 +59,7 @@
         "muyAlto": "Buscas oportunidades para mejorarte a ti mismo y para demostrar que eres una persona capaz."
       },
       "value_self_transcendence": {
-        "muyBajo": "Crees que las personas pueden encargarse de sus propios asuntos sin ayuda",
+        "muyBajo": "Crees que las personas pueden encargarse de sus propios asuntos sin ayuda.",
         "bajo": "A veces consideras que las personas pueden encargarse de sus propios asuntos sin ayuda.",
         "alto": "Consideras algo importante cuidar de las personas que te rodean.",
         "muyAlto": "Crees que es importante cuidar de las personas que te rodean."
@@ -218,86 +240,141 @@ function getTwoMoreRelevant(arrDatos){
   //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
   //top2 tiene el segundo que mas se aleja
     for (var i = 0; i < arrDatos.length; i++) {
-      if (arrDatos[i] > high1) {
+      console.log("Percentile: " + arrDatos[i].percentile);
+      console.log("High1: " +  high1);
+      console.log("High2: " +  high2);
+      if (arrDatos[i].percentile > high1) {
         high2 = high1;
   	    top2 = top1;
 
-        high1 = arrDatos[i];
+        high1 = arrDatos[i].percentile;
   	    top1 = i;
-  } else if (arrDatos[i] > high2) {
-        high2 = arrDatos[i];
+  } else if (arrDatos[i].percentile > high2) {
+        high2 = arrDatos[i].percentile;
   	    top2 = i;
       }
     }
 
+    console.log("Top 1");
+    console.log(top1);
+    console.log("Top 2");
+    console.log(top2);
+
   return [top1, top2]; //regresa la posicion de los valores mas relevantes
 }
 
-//funcion para obtener la descripcion de la persona
-    function getImportantText(dataReceived) {
+//modifica los valores del percentile para que representen la distancia al punto medio (0.5)
+function changeToRelevance(arrDatos){
+  for (var i = 0; i < arrDatos.length; i++) {
+    arrDatos[i].percentile = Math.abs(arrDatos[i].percentile - 0.5);
+  }
+}
 
-      var big5Array = dataReceived.personality;
-
-    	var top1;
-    	var top2;
+function getBig5Desc(big5Array){
+      var top1;
+      var top2;
       var pair;
       var arrHiLo = [0,0];
 
-    	// llena un arreglo para ver si cada valor es alto o bajo
+      // llena un arreglo para ver si cada valor es alto o bajo
       //arrHilo especifica para cada big_5, si es alto (1 si es mayor a 0.5) o bajo (0, si es menor a 0.5)
-    	for (var i = 0; i < big5Array.length; i++) {
-    		if (big5Array[i].percentile > 0.5)
-    			arrHiLo[i] = 1;
-    		else
-    			arrHiLo[i] = 0;
-    	}
-    	//modifica los valores para ser distancia del punto medio
-    	for (var i = 0; i < big5Array.length; i++) {
-    		big5Array[i] = Math.abs(big5Array[i].percentile - 0.5);
-    	}
+      for (var i = 0; i < big5Array.length; i++) {
+        if (big5Array[i].percentile > 0.5)
+          arrHiLo[i] = 1;
+        else
+          arrHiLo[i] = 0;
+      }
 
-///***************************************************************
-    	// top1 = 0;
-    	// top2 = 0;
-      // var high1 = 0;
-      // var high2 = 0;
-      //
-    	// // Separa las posiciones del mas grande y segundo mas grande
-      // //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
-      // //top2 tiene el segundo que mas se aleja
-      //   for (var i = 0; i < big5Array.length; i++) {
-      //     if (big5Array[i] > high1) {
-      //       high2 = high1;
-    	// 	top2 = top1;
-      //       high1 = big5Array[i];
-    	// 	top1 = i;
-      //     } else if (big5Array[i] > high2) {
-      //       high2 = big5Array[i];
-    	// 	top2 = i;
-      //     }
-      //   }
-      //
-      //   // 0 = H-H,  1 = H-L, 2 = L-H,  3 = L-L
-
-///***************************************************************
+      //modifica los valores para ser distancia del punto medio
+      changeToRelevance(big5Array);
       let response = getTwoMoreRelevant(big5Array);
       top1 = response[0];
       top2 = response[1];
-///***************************************************************
 
-    	//Define las posiciones de la matriz 3D
-    	if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){ //H-H
-    		pair = 0;
-    	} else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {// H-L
-    		pair = 1;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {//L-L
-    		pair = 3;
-    	} else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {// L-H
-    		pair = 2;
-    	}
 
-	//Regresa los 3 valores
+      //Define las posiciones de la matriz 3D
+      if (arrHiLo[top1] == 1 && arrHiLo[top2] == 1){ //H-H
+        pair = 0;
+      } else if (arrHiLo[top1] == 1 && arrHiLo[top2] == 0) {// H-L
+        pair = 1;
+      } else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 0) {//L-L
+        pair = 3;
+      } else if (arrHiLo[top1] == 0 && arrHiLo[top2] == 1) {// L-H
+        pair = 2;
+      }
+
+    //Regresa los 3 valores
     return myArrF[top1][top2][pair];
+}
+
+//clasificar si es
+function classifyInFour(arrDatos, arrClass){
+  for(var i = 0; i < arrDatos.length; i++){
+    if(arrDatos[i].percentile < 0.25){
+      arrClass[i] = "muyBajo";
+    } else if(arrDatos[i].percentile >= 0.25 && arrDatos[i].percentile < 0.50){
+      arrClass[i] = "bajo";
+    } else if(arrDatos[i].percentile >= 0.50 && arrDatos[i].percentile < 0.75){
+      arrClass[i] = "alto";
+    } else {
+      arrClass[i] = "muyAlto";
+    }
+  }
+}
+
+function getDescValues(arrValores){
+    var arrClass = [0,0];
+    var top1, top2, rango1, rango2;
+    var valor1, valor2;
+
+    console.log("entro a desc values");
+   //clasificar en muy bajo, bajo, alto y muy alto
+   classifyInFour(arrValores, arrClass);
+
+   console.log("Valores");
+   for(var i = 0; i < arrValores.length; i++){
+     console.log(arrValores[i].percentile);
+   }
+
+   console.log("Clasificacion");
+   for(var i = 0; i < arrClass.length; i++){
+     console.log(arrClass[i]);
+   }
+
+   //cambiar el arreglo para que tenga el valor de relevancia
+   changeToRelevance(arrValores);
+
+   console.log("Valores");
+   for(var i = 0; i < arrValores.length; i++){
+     console.log(arrValores[i].percentile);
+   }
+   //
+   response = getTwoMoreRelevant(arrValores);
+
+   top1 = response[0];
+   console.log("Top 1");
+   console.log(top1);
+
+   top2 = response[1];
+   console.log("Top 2");
+   console.log(top2);
+   //
+   valor1 = arrValores[top1].trait_id;
+   valor2 = arrValores[top2].trait_id;
+   rango1 = arrClass[top1];
+   rango2 = arrClass[top2];
+
+  return valores[valor1][rango1] + " " + valores[valor2][rango2];
+}
+
+//funcion para obtener la descripcion de la persona
+function getImportantText(dataReceived) {
+    var dataReceived2;
+
+    // crear nuevo objeto con toda la informacion, ya que se modificara la modificacion del objeto recibido,
+    // no queremos que esto pase porque el objeto tambien sera utilizado para crear las graficas
+
+    return getBig5Desc(dataReceived.personality) + " " + getDescValues(dataReceived.values);
 }
 
     $.ajax({
@@ -339,8 +416,8 @@ function getTwoMoreRelevant(arrDatos){
                     var emotionalRange = dataReceived.personality[3].percentile;
                     var openness = dataReceived.personality[4].percentile;
 
-                    $("#insightsDescription").html(getImportantText(dataReceived));
-
+                    var agregar = `<p>${getBig5Desc(dataReceived.personality)}</p>`;
+                    $("#insightsDescription").html(agregar);
 
 
                     //Grafica de big5
@@ -438,8 +515,9 @@ function getTwoMoreRelevant(arrDatos){
                         }
                     });
 
-                    // SQUARE CHARTS ENDS //
-
+                    // // SQUARE CHARTS ENDS //
+                    var agregar = `<p>${getDescValues(dataReceived.values)}</p>`;
+                    $("#insightsDescription").append(agregar);
 
                     // BUBBLE CHARTS STARTS //
                     //Grafica de necesidades   var myChart = new Chart
