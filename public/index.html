@@ -96,18 +96,21 @@
                    <li>
                      <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
                      <div class="collapsible-body"><span>
-                      Describe de forma general, c&oacute;mo interact&uacute;a una persona con el mundo.
-                      El modelo incluye cinco dimensiones primarias:
+                      <em>Los cincos grandes</em> es el modelo de personalidad más usado para describir c&oacute;mo interact&uacute;a una persona con el mundo de manera general.
+                      Este modelo incluye cinco dimensiones primarias:
                       <br>
                       <br>
                       <ol>
-                      <li>Amabilidad es la tendencia de una persona a ser compasiva y cooperadora con los dem&aacute;s.</li>
-                      <li>Responsabilidad es la tendencia de una persona a actuar de forma organizada o meticulosa.</li>
-                      <li>Extroversi&oacute;n es la tendencia de una persona a buscar la estimulaci&oacute;n en compa&ntilde;&iacute;a de los dem&aacute;s.</li>
-                      <li>Rango emocional, tambi&eacute;n conocido como Neurosis, es la magnitud a la que las emociones de la persona son afectadas por su entorno.</li>
-                      <li>Apertura es el punto hasta el que una persona est&aacute; abierta a experimentar actividades diversas.</li>
+                      <li>Amabilidad: es la tendencia de una persona a ser compasiva y cooperadora con los dem&aacute;s.</li>
+                      <li>Responsabilidad: es la tendencia de una persona a actuar de forma organizada o meticulosa.</li>
+                      <li>Extroversi&oacute;n: es la tendencia de una persona a buscar la estimulaci&oacute;n en compa&ntilde;&iacute;a de los dem&aacute;s.</li>
+                      <li>Rango emocional: tambi&eacute;n conocido como Neurosis, es la magnitud en la que las emociones de la persona son afectadas por su entorno.</li>
+                      <li>Apertura: es el punto hasta el que una persona est&aacute; abierta a experimentar actividades diversas.</li>
                       </ol>
-                      </span></div>
+                      </span>
+                      <br>
+                      <a href="https://console.bluemix.net/docs/services/personality-insights/models.html#models" target="_blank">Da click aquí para obtener más información.</a>
+                    </div>
                    </li>
                  </ul>
               </div>
@@ -131,18 +134,24 @@
     <div class="inferior"></div>
   </div>
   <!--graph de necesidades-->
-  <section>
+  <section class="sample-chart-wrapper ">
       <canvas id="container3" width="400" height="200"></canvas>
       <!--<div id="container3"></div>-->
-  </section>
 
-  <!--detalles de necesidades-->
-  <ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
-    <li>
-      <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
-      <div class="collapsible-body"><img src="./img/necesidadCuadro.png" alt="Necesidades" height="700" width="550"></div>
-    </li>
-  </ul>
+      <!--detalles de necesidades-->
+      <div class="detalles">
+        <ul class="collapsible" style="border: 2px solid #842ca0; margin: 2px;/*width:45%;margin-left:380px;*/">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+            <div class="collapsible-body">
+              <img class="responsive-img" src="./img/necesidadCuadro.png" alt="Necesidades">
+              <br>
+              <a href="https://console.bluemix.net/docs/services/personality-insights/needs.html#needs" target="_blank">Da click aquí para obtener más información.</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+  </section>
 
   <br>
   <br>
@@ -159,16 +168,22 @@
   <!--graph valores-->
   <section>
       <div id="container2"></div>
-  </section>
 
-  <!--detalles de valores-->
-  <ul class="collapsible" style="border: 2px solid #842ca0; width:45%;margin-left:380px;">
-     <li>
-       <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
-       <div class="collapsible-body"><img src="./img/valorCuadro.png" alt="Valores" height="450" width="540"></div>
-     </li>
-   </ul>
-  <br>
+  <div class="detalles">
+    <!--detalles de valores-->
+    <ul class="collapsible" style="border: 2px solid #842ca0;">
+       <li>
+         <div class="collapsible-header"><i class="material-icons">info_outline</i><span style="font-size:17px;" >Detalles</span></div>
+         <div class="collapsible-body">
+           <img class="responsive-img" src="./img/valorCuadro.png" alt="Valores">
+           <br>
+           <a href="https://console.bluemix.net/docs/services/personality-insights/values.html#values" target="_blank">Da click aquí para obtener más información.</a>
+         </div>
+       </li>
+     </ul>
+    <br>
+  </div>
+  </section>
 
 
     <!--</div>

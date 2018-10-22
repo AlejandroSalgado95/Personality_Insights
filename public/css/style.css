@@ -146,6 +146,44 @@ ul.dropdown-content.select-dropdown li span {
   padding-bottom: 2px;
 }
 /*******************************/
+
+/****Responsivesness Detalles **/
+@media only screen and (min-width: 850px) {
+    /* For desktop: */
+    .detalles{
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 850px) {
+     /*For tablets:*/
+    .detalles{
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+  .detalles{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.detalles ul li div img{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.collapsible-body img{
+  object-fit: scale-down;
+}
+
 .icon-block {
   padding: 0 15px;
 }

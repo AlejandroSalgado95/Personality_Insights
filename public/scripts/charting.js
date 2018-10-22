@@ -470,7 +470,7 @@ function getImportantText(dataReceived) {
                             }],
                             data: [{
                                 id: 'A',
-                                name: 'Conservador',
+                                name: 'Conservación',
                                 color: "#009688"
                             }, {
                                 id: 'B',
@@ -482,11 +482,11 @@ function getImportantText(dataReceived) {
                                 color: "#2196F3"
                             }, {
                                 id: 'D',
-                                name: 'Mejoramiento Autónomo',
+                                name: 'Superación Personal',
                                 color: '#F44336'
                             }, {
                                 id: 'E',
-                                name: 'Trascender',
+                                name: 'Autotranscendencia',
                                 color: '#8BC34A'
                             }, {
                                 parent: 'A',
