@@ -14,6 +14,7 @@ var async = require("async");  //modulo para utilizar funciones asincronas (ej. 
 //      que el servidor nos esté prestando, y dicha base de datos sera util para esta aplicacion web
 //Servidor MySQL provisto por: Gearhost.com
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 var pool  = mysql.createPool({
  connectionLimit : 10,
@@ -23,6 +24,15 @@ var pool  = mysql.createPool({
  database        : 'piapplicationdb'
 });
 
+//Parametros para conectarse a la base de datos de digital ocean,
+//falta habilitar que el servidor acepte conexiones que no sean de localhost
+// var pool  = mysql.createPool({
+//  connectionLimit : 10,
+//  host            : '104.131.75.96',
+//  user            : 'root',
+//  password        : 'b930f62a8d513ae4962f7c37433aa263482f343d9ef60e77',
+//  database        : 'MostlaPI'
+// });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Credenciales para utilizar la API de twitter
@@ -723,7 +733,7 @@ function lastProfile(response,postData, cookieJar){
   //Query SELECT con name y id_user
   var arraySelects = [];
   var currentID;
-  pool.query("SELECT id FROM profile WHERE id_user='"+id_user+"' order by id desc LIMIT 1 ", function (err, result) {
+  pool.query("SELECT id FROM profile WHERE id_user='"+id_user+"' order by id desc LIMIT 1;", function (err, result) {
       if (err) throw err;
       arraySelects = result;
       currentID = arraySelects[0].id;
