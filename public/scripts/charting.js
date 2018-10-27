@@ -401,11 +401,11 @@ function getImportantText(dataReceived) {
                     console.log("Data: " + dataReceived.personality[3].percentile);
                     console.log("Data: " + dataReceived.personality[4].percentile);
 
-                    var agreeableness = dataReceived.personality[0].percentile;
-                    var conscientiousness = dataReceived.personality[1].percentile;
-                    var extraversion = dataReceived.personality[2].percentile;
-                    var emotionalRange = dataReceived.personality[3].percentile;
-                    var openness = dataReceived.personality[4].percentile;
+                    var agreeableness = dataReceived.personality[0].percentile * 100;
+                    var conscientiousness = dataReceived.personality[1].percentile * 100;
+                    var extraversion = dataReceived.personality[2].percentile * 100;
+                    var emotionalRange = dataReceived.personality[3].percentile * 100;
+                    var openness = dataReceived.personality[4].percentile * 100;
 
                     var agregar = `<p>${getBig5Desc(dataReceived.personality)}</p>`;
                     $("#insightsDescription").html(agregar);
@@ -428,12 +428,13 @@ function getImportantText(dataReceived) {
                             }]
                         },
                         options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero:true
-                                    }
-                                }]
+                            scale: {
+                                ticks: {
+                                  beginAtZero: true,
+                                  min: 0,
+                                  max: 100,
+                                  stepSize: 10
+                                }
                             }
                         }
                     });
@@ -510,7 +511,7 @@ function getImportantText(dataReceived) {
                     var agregar = `<p>${getDescValues(dataReceived.values)}</p>`;
                     $("#insightsDescription").append(agregar);
 
-                    // BUBBLE CHARTS STARTS //
+                    // BAR CHART STARTS //
                     //Grafica de necesidades   var myChart = new Chart
                     var necesidades = document.getElementById("container3").getContext('2d');
                     var myChart = new Chart(necesidades, {
@@ -588,9 +589,9 @@ function getImportantText(dataReceived) {
                         }
                     }
                 });
+                // BAR CHART ENDS //
 
-
-
+                // BUBBLE CHARTS STARTS //
                     // Highcharts.chart('container3', {
                     //
                     //   chart: {
