@@ -95,7 +95,7 @@ color: #7d868e;
   background-image: none!important;
 }
 
-/*para cambiar el estilo del close icon del dialog*/
+/*para cambiar el estilo del close icon del dialog de twitter*/
 button.ui-button-icon-only.ui-dialog-titlebar-close{
   background-image: url(../img/close-icon-large.png)!important;
   background-size: 20px 20px;
@@ -147,13 +147,14 @@ ul.dropdown-content.select-dropdown li span {
 }
 /*******************************/
 
-/****Responsivesness Detalles **/
+/****Responsivesness Detalles Collapsible**/
 @media only screen and (min-width: 850px) {
     /* For desktop: */
     .detalles{
       width: 60%;
       margin-left: auto;
       margin-right: auto;
+      max-width: 670px; /*para que no se vea tan grande la imagen*/
     }
 }
 
@@ -163,6 +164,7 @@ ul.dropdown-content.select-dropdown li span {
       width: 70%;
       margin-left: auto;
       margin-right: auto;
+      max-width: 670px;
     }
 }
 
@@ -171,6 +173,7 @@ ul.dropdown-content.select-dropdown li span {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    max-width: 670px;
   }
 }
 
@@ -191,6 +194,7 @@ ul.dropdown-content.select-dropdown li span {
 	font-size: inherit;
 }
 
+/*CONTENEDORES para las graficas*/
 #myChart {
     padding-bottom: 25px;
 }

@@ -255,10 +255,6 @@ function getTwoMoreRelevant(arrDatos){
       }
     }
 
-    console.log("Top 1");
-    console.log(top1);
-    console.log("Top 2");
-    console.log(top2);
 
   return [top1, top2]; //regresa la posicion de los valores mas relevantes
 }
@@ -369,11 +365,6 @@ function getDescValues(arrValores){
 
 //funcion para obtener la descripcion de la persona
 function getImportantText(dataReceived) {
-    var dataReceived2;
-
-    // crear nuevo objeto con toda la informacion, ya que se modificara la modificacion del objeto recibido,
-    // no queremos que esto pase porque el objeto tambien sera utilizado para crear las graficas
-
     return getBig5Desc(dataReceived.personality) + " " + getDescValues(dataReceived.values);
 }
 
@@ -525,7 +516,7 @@ function getImportantText(dataReceived) {
                     var myChart = new Chart(necesidades, {
                     type: 'bar',
                     data: {
-                        labels: ["Retos", "Reservarse", "Curiosidad", "Emoción", "Armonía", "Ideales", "Libertad", "Amor", "Práctico", "Expresivo", "Estabilidad","Estructura"],
+                        labels: ["Desafío", "Proximidad", "Curiosidad", "Entusiasmo", "Armonía", "Ideales", "Libertad", "Amor", "Uso práctico", "Autoexpresión", "Estabilidad","Estructura"],
                         datasets: [{
                             label: 'Necesidades',
                             data: [dataReceived.needs[0].percentile*100,
