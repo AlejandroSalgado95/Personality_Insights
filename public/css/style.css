@@ -8,6 +8,45 @@
 
 /*amarillo: #ffca28*/
 
+html {
+  font-size: 14px;
+}
+
+.container2 {
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 92%;
+}
+
+/*modificar tamaño de letra de la descripcion*/
+#insightsDescription p{
+  font-size: 0.95em;
+  margin: 2px;
+}
+
+/*cambiar estilo de los selects*/
+.select-wrapper .caret{
+  top: 25%!important;
+}
+
+.select-wrapper {
+  /*width: 200px!important;*/
+}
+
+.select-dropdown{
+  font-size: 0.9em!important;
+}
+
+.containerIdioma{
+  width: 30%;
+  margin: 25px auto 0px auto;
+}
+
+.containerIdioma h6{
+  text-align: center;
+}
+
+
 /*NAV BAR ********************************/
 nav ul li a{
   font-size:16px;
@@ -26,7 +65,7 @@ nav ul li a:hover {
 /***************Titulo de index.html***************/
 .titulo{
   background-color: #60409c;
-  padding: 20px;
+  padding: 15px;
 }
 
 /**Titulos para secciones necesidades y valores*/
@@ -83,6 +122,11 @@ color: #7d868e;
 
 textarea:-ms-input-placeholder {
 color: #7d868e;
+}
+
+/* COMO esta integrado bootstrap y materialize salen dos flechas en el select, lo sig es para que solo salga la flecha de materialize. Lo mejor seria quitar bootstrap y adaptar los estilos para que se vean bien con solo materialize*/
+.caret {
+  border-color: transparent !important;
 }
 
 /****ESTILOS DIALOG PARA ANALIZAR POR TWITTER */

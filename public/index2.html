@@ -33,9 +33,9 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 
 </head>
 
@@ -56,7 +56,7 @@
 
 <nav style="height:64px" class="nav-extended purple darken-4">
     <div class="nav-wrapper">
-      <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-top:-5px; margin-left:32px; height:40px">
+      <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-left: 20px; vertical-align: middle; height:40px">
 
 <span style="position:absolute; margin-top: -2px; margin-left:10px; font-size: 17px;">Conectado como: <span id = "email" style=" margin-top: 10px; margin-left: 10px; font-size: 17px;"></span></span>
      <ul class="right hide-on-med-and-down">
@@ -68,9 +68,9 @@
 
 
   <div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-      <br><br>
-      <h1 class="header center blue-grey-text text-lighten-4">Análisis de personalidad</h1>
+    <div class="container2">
+      <br>
+      <h4 class="header center blue-grey-text text-lighten-4">Análisis de personalidad</h4>
       <div class="row card">
         <script>
             function checkform(evt)    {
@@ -91,15 +91,20 @@
         <!--START BUTTON  This sends all content data to Personality Insights-->
         <!--<form action="/PIServiceEssay" method="post" class="col s8  white">-->
       <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkform(event)">
-        <div class="row" style="padding:40px 40px 10px 40px; margin-bottom: 10px">
+        <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
           <div class="input-field card-content col s12">
             <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
             <!--<textarea id="textarea2" name = "textAreaContent" class="materialize-textarea" data-length="1000"></textarea>-->
             <!--<label for="textarea2">Escribe aquí</label>-->
-            <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
-              <option value="en">Inglés</option>
-              <option value="es">Español</option>
-            </select>
+
+            <div class="containerIdioma">
+              <h6>Idioma del Ensayo</h6>
+              <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
+                <option value="0">-Selecciona-</option>
+                <option value="en">Inglés</option>
+                <option value="es">Español</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="card-action">
@@ -154,7 +159,7 @@
   </div>
 
   <footer class="page-footer  purple darken-4">
-    <div class="container">
+    <div class="container2">
       <div class="row">
         <div class="col l6 s12">
           <h5 class="white-text">Información</h5>
@@ -164,7 +169,7 @@
       </div>
     </div>
     <div class="footer-copyright">
-      <div class="container">
+      <div class="container2">
       Hecho por CIE Developers
       </div>
     </div>

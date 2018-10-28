@@ -31,7 +31,7 @@ function showForm() {
 
     $( "#myForm" ).dialog({
     width: 400,
-    height: 300,
+    height: 350,
 		dialogClass: 'dialogTwitter',
     open: function() {
         // On open, hide the original submit button
