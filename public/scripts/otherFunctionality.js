@@ -1,10 +1,9 @@
 $(document).ready(function()
 {
-    //alert("hola como andas");
-    console.log("hola como andas");
-    $("#textarea2").change(function (){ 
-                                            console.log("Cambiaste el texto");
-                                            $(".hiddendiv.common").remove();  
+
+    $("#textarea2").change(function (){
+      console.log("Cambiaste el texto");
+      $(".hiddendiv.common").remove();
                                        });
 
     var emailCookie = getCookie("email");
