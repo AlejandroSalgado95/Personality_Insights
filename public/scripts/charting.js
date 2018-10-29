@@ -7,29 +7,7 @@
     var agreeableness;
     var emotionalRange;
 
-    // top1 = 0;
-    // top2 = 0;
-    // var high1 = 0;
-    // var high2 = 0;
-    //
-    // // Separa las posiciones del mas grande y segundo mas grande
-    // //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
-    // //top2 tiene el segundo que mas se aleja
-    //   for (var i = 0; i < big5Array.length; i++) {
-    //     if (big5Array[i] > high1) {
-    //       high2 = high1;
-    // 	top2 = top1;
-    //       high1 = big5Array[i];
-    // 	top1 = i;
-    //     } else if (big5Array[i] > high2) {
-    //       high2 = big5Array[i];
-    // 	top2 = i;
-    //     }
-    //   }
-    //
-    //   // 0 = H-H,  1 = H-L, 2 = L-H,  3 = L-L
-
-
+    //Para obtener texto descriptivo de valores
     var valores = {
       "value_conservation" :
       {
@@ -230,6 +208,7 @@
     ]
 ];
 
+//Obtener los dos traits mas relevantes de arrDatos
 function getTwoMoreRelevant(arrDatos){
   top1 = 0;
   top2 = 0;
@@ -237,12 +216,9 @@ function getTwoMoreRelevant(arrDatos){
   var high2 = 0;
 
   // Separa las posiciones del mas grande y segundo mas grande
-  //top1 tiene el big_5 que se aleja mas del punto medio (sea percentile grande o chico)
+  //top1 tiene el trait que se aleja mas del punto medio (sea percentile grande o chico)
   //top2 tiene el segundo que mas se aleja
     for (var i = 0; i < arrDatos.length; i++) {
-      console.log("Percentile: " + arrDatos[i].percentile);
-      console.log("High1: " +  high1);
-      console.log("High2: " +  high2);
       if (arrDatos[i].percentile > high1) {
         high2 = high1;
   	    top2 = top1;
@@ -255,8 +231,7 @@ function getTwoMoreRelevant(arrDatos){
       }
     }
 
-
-  return [top1, top2]; //regresa la posicion de los valores mas relevantes
+  return [top1, top2]; //regresa la posicion de los traits mas relevantes
 }
 
 //modifica los valores del percentile para que representen la distancia al punto medio (0.5)
@@ -266,6 +241,7 @@ function changeToRelevance(arrDatos){
   }
 }
 
+//Obtener texto descriptivo de la personalidad (5 grandes)
 function getBig5Desc(big5Array){
       var top1;
       var top2;
@@ -303,7 +279,7 @@ function getBig5Desc(big5Array){
     return myArrF[top1][top2][pair];
 }
 
-//clasificar si es
+//clasificar el percentile del valor
 function classifyInFour(arrDatos, arrClass){
   for(var i = 0; i < arrDatos.length; i++){
     if(arrDatos[i].percentile < 0.25){
@@ -318,43 +294,24 @@ function classifyInFour(arrDatos, arrClass){
   }
 }
 
+//funcion para obtener texto descirptivo de los valores de la persona
 function getDescValues(arrValores){
     var arrClass = [0,0];
     var top1, top2, rango1, rango2;
     var valor1, valor2;
 
-    console.log("entro a desc values");
    //clasificar en muy bajo, bajo, alto y muy alto
    classifyInFour(arrValores, arrClass);
 
-   console.log("Valores");
-   for(var i = 0; i < arrValores.length; i++){
-     console.log(arrValores[i].percentile);
-   }
-
-   console.log("Clasificacion");
-   for(var i = 0; i < arrClass.length; i++){
-     console.log(arrClass[i]);
-   }
-
-   //cambiar el arreglo para que tenga el valor de relevancia
+   //cambiar el arreglo para que en vez de percentiles, tenga que tan relevante es el valor
    changeToRelevance(arrValores);
 
-   console.log("Valores");
-   for(var i = 0; i < arrValores.length; i++){
-     console.log(arrValores[i].percentile);
-   }
-   //
+   //obtener los dos valores mas relevantes.
    response = getTwoMoreRelevant(arrValores);
-
    top1 = response[0];
-   console.log("Top 1");
-   console.log(top1);
-
    top2 = response[1];
-   console.log("Top 2");
-   console.log(top2);
-   //
+
+   //obtener el texto descriptivo de la matriz valores
    valor1 = arrValores[top1].trait_id;
    valor2 = arrValores[top2].trait_id;
    rango1 = arrClass[top1];
@@ -407,6 +364,7 @@ function getImportantText(dataReceived) {
                     var emotionalRange = dataReceived.personality[3].percentile * 100;
                     var openness = dataReceived.personality[4].percentile * 100;
 
+                    //Agregar el texto descriptivo de la personalidad
                     var agregar = `<p>${getBig5Desc(dataReceived.personality)}</p>`;
                     $("#insightsDescription").html(agregar);
 
@@ -428,14 +386,14 @@ function getImportantText(dataReceived) {
                             }]
                         },
                         options: {
-                            scale: {
-                                ticks: {
-                                  beginAtZero: true,
-                                  min: 0,
-                                  max: 100,
-                                  stepSize: 10
-                                }
-                            }
+                          scale: {
+                              ticks: {
+                                beginAtZero: true,
+                                min: 0,
+                                max: 100,
+                                stepSize: 10 //para que vaya 0,10,20...
+                              }
+                          }
                         }
                     });
 
@@ -507,11 +465,16 @@ function getImportantText(dataReceived) {
                         }
                     });
 
-                    // // SQUARE CHARTS ENDS //
+                    //Agregar el texto descriptivo de los valores
+                    //*Checar como acomodar esto mejor, solo que cuango mandar a llamar
+                    //a getDescValues se modifican los percentiles de values, por eso agrego esto despues
+                    //de poner la grafica, igual se podria copiar toda la informacion a otro arreglo y utilizar funcion get important text
                     var agregar = `<p>${getDescValues(dataReceived.values)}</p>`;
                     $("#insightsDescription").append(agregar);
 
-                    // BAR CHART STARTS //
+                    // // SQUARE CHARTS ENDS //
+
+                    // BUBBLE CHARTS STARTS //
                     //Grafica de necesidades   var myChart = new Chart
                     var necesidades = document.getElementById("container3").getContext('2d');
                     var myChart = new Chart(necesidades, {
@@ -544,18 +507,6 @@ function getImportantText(dataReceived) {
                             'rgba(125, 187, 195, 0.7)',
                             'rgba(125, 187, 195, 0.7)',
                             'rgba(125, 187, 195, 0.7)',
-                                /*'#FF5722',
-                                '#FF9800',
-                                '#E91E63',
-                                '#FFEB3B',
-                                '#673AB7',
-                                '#8BC34A',
-                                '#4CAF50',
-                                '#009688',
-                                '#00BCD4',
-                                '#9C27B0',
-                                '#2196F3',
-                                '#3F51B5',*/
                             ],
                             borderColor: [ 'rgba(125, 187, 195, 1)',
                             'rgba(125, 187, 195, 1)',
@@ -569,12 +520,6 @@ function getImportantText(dataReceived) {
                             'rgba(125, 187, 195, 1)',
                             'rgba(125, 187, 195, 1)',
                             'rgba(125, 187, 195, 1)',
-                                /*'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'*/
                             ],
                             borderWidth: 1
                         }]
@@ -589,9 +534,9 @@ function getImportantText(dataReceived) {
                         }
                     }
                 });
-                // BAR CHART ENDS //
 
-                // BUBBLE CHARTS STARTS //
+
+
                     // Highcharts.chart('container3', {
                     //
                     //   chart: {
