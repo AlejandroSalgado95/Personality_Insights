@@ -18,6 +18,16 @@ html {
   width: 92%;
 }
 
+.message{
+  font-size: 0.9em;
+  border: 2px solid #e0bc42;
+  padding: 15px;
+  margin: 0px 0px 25px 0px;
+  background-color: #f5d93f66;
+  color: #cfa515;
+  border-radius: 3px;
+}
+
 /*modificar tamaño de letra de la descripcion*/
 #insightsDescription p{
   font-size: 0.95em;
