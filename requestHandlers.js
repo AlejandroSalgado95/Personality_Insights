@@ -361,7 +361,23 @@ function piServiceEssay(response,postData, cookieJar){
 
 }
 
-
+//funcion para restarle 1 a un numero
+function decStrNum (n) {
+    n = n.toString();
+    var result=n;
+    var i=n.length-1;
+    while (i>-1) {
+      if (n[i]==="0") {
+        result=result.substring(0,i)+"9"+result.substring(i+1);
+        i --;
+      }
+      else {
+        result=result.substring(0,i)+(parseInt(n[i],10)-1).toString()+result.substring(i+1);
+        return result;
+      }
+    }
+    return result;
+}
 
 function piServiceTwitter(response,postData, cookieJar){
 
@@ -378,6 +394,8 @@ console.log("Request handler 'piService' was called.");
  //API twitter how to do  a request:  https://developer.twitter.com/en/docs/tweets/timelines/overview
  //How to transverse a timeline https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
  // https://medium.com/ibm-watson-tutorials/getting-started-with-ibm-watson-personality-insights-2-3d0260926519
+//http://2ality.com/2012/07/large-integers.html necesitas id_str
+// https://console.bluemix.net/docs/services/personality-insights/input.html#input
 
 //Pendientes: 1) llamar recursivamente la funcion de obtener timeline para asi obtener 200 tweets con cada request hasta llegar a 1000 tweets
 //            2) Preguntar al usuario en que idioma estan los tweets
@@ -410,8 +428,7 @@ console.log("Request handler 'piService' was called.");
 
   var twitterParams = { screen_name: twitterAccount,
                         count:200,
-                        include_rts: false,
-                        exclude_replies : false,
+                        exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
                         trim_user: true
                       };
 
@@ -424,47 +441,65 @@ console.log("Request handler 'piService' was called.");
 
   async.whilst(
       //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
-      function() { return (twitterContent.contentItems.length < 500 && !notEnoughTweets && !somethingWrong); },
+      function() { return (twitterContent.contentItems.length < 3200 && !notEnoughTweets && !somethingWrong); },
 
       function(outerCallback) {
 
             //cuando ya se han leido tweets tienes que empezar a leer desde el max_id para abajo para no leer los mismos tweets, por eso se incluye
             //max_id
             if (count > 1){
+
+                console.log("Final latest max_id" + latestMaxID);
                  twitterParams = { screen_name: twitterAccount,
                         //Importante: el count solo es un maximo, no necesariamente vas a obtener 200 tweets ya que primero se cuentan los 200 tweets y //luego se quitan los rts y los replies
                         count:200, //maximo puedes retrieve 200 tweets por request
-                        include_rts: false, //no tomar en cuenta retweets
-                        exclude_replies : false,
+                        exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
                         trim_user: true,
                         max_id : latestMaxID
                       };
             }
 
 
-
             //Obten un maximo de 200 tweets (los mas recientes) que se han posteado en la cuenta de twitter
            twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
 
+
               if (!error) {
+
                   //Empaqueta los tweets obtenidos en un arreglo de objetos (la configuracion de dicho arreglo es estrictamente especifica para poder ser analizado por el servicio PI de IBM)
                   async.forEachOf(tweets, function (element, index, innerCallback){
-                     //console.log(element);
-                     console.log('packing tweet number ' + tweetNum);
-                     console.log('content of the tweet: ' + element.text);
-                     console.log('tweet created on: ' + element.created_at);
-                     console.log('tweet language: ' + element.lang);
 
-                     var contentItem = {
-                                          "content": element.text,
-                                          "id": element.id,
-                                          /*"created": element.created_at,*/ //pide una fecha en milisegundos, no en formato fecha
-                                          "contenttype" : 'text/plain',
-                                          "language": element.lang
-                                       };
+                     if(element.lang == tweetsLang && !element.retweeted){ //solo seleccionar los tweets del idioma especificado por el usuario
 
-                     tweetNum = tweetNum + 1;
-                     twitterContent.contentItems.push(contentItem);
+                       console.log("Curent_user_retweet : " + element.current_user_retweet);
+                        if (element.in_reply_to_screen_name != null) {
+                            var parentid = element.in_reply_to_user_id;
+                         } else if (element.retweeted && (element.current_user_retweet != null)) {
+                             var parentid = element.current_user_retweet.id_str;
+                         }
+
+
+                       var contentItem = {
+                                            "content": element.text.replace('[^(\\x20-\\x7F)]*',''),
+                                            "id": element.id_str,
+                                            "created": Date.parse(element.created_at),
+                                            "contenttype" : 'text/plain',
+                                            "language": element.lang,
+                                            "reply": element.in_reply_to_screen_name != null,
+                                            "parentid": parentid
+                                         };
+
+                       console.log('Content Item:');
+                       console.log('packing tweet number ' + tweetNum);
+                       console.log('id of tweet: ' + contentItem.id);
+                       console.log('content of the tweet: ' + contentItem.content);
+                       console.log('tweet created on: ' + contentItem.created);
+                       console.log('tweet language: ' + contentItem.language);
+
+                       tweetNum = tweetNum + 1;
+                       twitterContent.contentItems.push(contentItem);
+                     }
+
                      innerCallback();
 
                    }, function(err){
@@ -474,7 +509,15 @@ console.log("Request handler 'piService' was called.");
                         console.log('finished packing all the tweets for round ' + count);
                         console.log('Amount of tweets packed until now:' + twitterContent.contentItems.length);
                         count = count + 1;
-                        latestMaxID = twitterContent.contentItems[twitterContent.contentItems.length - 1].id;
+
+                        console.log("Latest Max Id: " + latestMaxID);
+
+                        //al pasar Max_ID como parametro estas pidiendo los tweets con id menor o igual a max_id,
+                        //como es inclusive hay que restarle 1 al id para que no se repitan tweets, es necesaria la funcion
+                        //decStrNum porque javascript no puede representar ints con precision de 64 bits
+                        latestMaxID = decStrNum(twitterContent.contentItems[twitterContent.contentItems.length - 1].id);
+
+                        console.log("New Latest Max Id: " + latestMaxID);
 
                         if (latestMaxID != pastMaxID){
                           pastMaxID = latestMaxID
@@ -499,8 +542,9 @@ console.log("Request handler 'piService' was called.");
       function (err, n) {
 
           console.log("FINISHED PACKING ALL TWEETS");
+          console.log()
 
-          if (notEnoughTweets || somethingWrong)
+          if (somethingWrong) //if (notEnoughTweets || somethingWrong)
           {
              if (notEnoughTweets){
 
@@ -565,10 +609,11 @@ console.log("Request handler 'piService' was called.");
 
 
               var params = {
-                      content: twitterContent,
+                      content: twitterContent, //CAMBIAR A content_items ?
                       // Content-type: el tipo de archivo a analizar, en este caso plain text
                       content_type: 'application/json',
-                      content_language: tweetsLang
+                      content_language: tweetsLang,
+                      include_raw: false
               };
 
 
