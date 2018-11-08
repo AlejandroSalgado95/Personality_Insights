@@ -386,20 +386,12 @@ console.log("Request handler 'piService' was called.");
  twitter.get('oauth/authorize', {force_login:true}, function(error, tweets, response) {
  });*/
 
- /*Detalles por los cuales quizas y no de exacto al IBM waton:
-  1.Se repiten tweets despues de cada ronda
-  2. Se analizan una cantidad diferente de tweets
-  3. No se filtran los tweets que no son en el idioma especificado*/
-
  //API twitter how to do  a request:  https://developer.twitter.com/en/docs/tweets/timelines/overview
  //How to transverse a timeline https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
  // https://medium.com/ibm-watson-tutorials/getting-started-with-ibm-watson-personality-insights-2-3d0260926519
 //http://2ality.com/2012/07/large-integers.html necesitas id_str
 // https://console.bluemix.net/docs/services/personality-insights/input.html#input
 
-//Pendientes: 1) llamar recursivamente la funcion de obtener timeline para asi obtener 200 tweets con cada request hasta llegar a 1000 tweets
-//            2) Preguntar al usuario en que idioma estan los tweets
-//            3) Especificar al contentType de los parametros de Personality insights que es un application/json
 
   console.log("Request handler 'piServiceTwitter' was called.");
 
@@ -429,7 +421,8 @@ console.log("Request handler 'piService' was called.");
   var twitterParams = { screen_name: twitterAccount,
                         count:200,
                         exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
-                        trim_user: true
+                        trim_user: true,
+                        include_rts: false
                       };
 
   var count = 1;
@@ -439,323 +432,408 @@ console.log("Request handler 'piService' was called.");
   var notEnoughTweets = false;
   var somethingWrong = false;
 
-  async.whilst(
-      //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
-      function() { return (twitterContent.contentItems.length < 3200 && !notEnoughTweets && !somethingWrong); },
+        //=====================================================================================================================
+        // ESTO ES SOLO PARA VER SI CON LOS TWEETS DE OPRAH HARDCODEADOS (SIN LLAMAR TWITTER API) DA IGUAL AL DEMO
+        //SI DA IGUAL AL DEMO
+        //=====================================================================================================================
 
-      function(outerCallback) {
+          // var twitterContent2 = {
+          //               "contentItems":[]
+          //             };
+          //
+          // for(var i = 0; i < tweets2.length; i++){
+          //   if(tweets2[i].lang == tweetsLang && !tweets2[i].retweeted){ //solo seleccionar los tweets del idioma especificado por el usuario
+          //
+          //      if (tweets2[i].in_reply_to_screen_name != null) {
+          //          var parentid = tweets2[i].in_reply_to_user_id;
+          //       } else if (tweets2[i].retweeted && (tweets2[i].current_user_retweet != null)) {
+          //           var parentid = tweets2[i].current_user_retweet.id_str;
+          //       }
+          //
+          //
+          //     var contentItem = {
+          //                          "content": tweets2[i].text.replace('[^(\\x20-\\x7F)]*',''),
+          //                          "id": tweets2[i].id_str,
+          //                          "created": Date.parse(tweets2[i].created_at),
+          //                          "contenttype" : 'text/plain',
+          //                          "language": tweets2[i].lang,
+          //                          "reply": tweets2[i].in_reply_to_screen_name != null,
+          //                          "parentid": parentid
+          //                       };
+          //
+          //     console.log('Content Item:');
+          //     console.log('packing tweet number ' + tweetNum);
+          //     console.log('_____________________________________');
+          //     console.log('id: ' + contentItem.id);
+          //     console.log('content: ' + contentItem.content);
+          //     console.log('created: ' + contentItem.created);
+          //     console.log('language: ' + contentItem.language);
+          //     console.log('contenttype: ' + contentItem.contenttype);
+          //     console.log('_____________________________________');
+          //     //console.log('reply: ' + contentItem.reply);
+          //    // console.log('parentid: ' + contentItem.parentid);
+          //
+          //     tweetNum = tweetNum + 1;
+          //     twitterContent2.contentItems.push(contentItem);
+          //   }
+          // }
+        //=====================================================================================================================
+        //=====================================================================================================================
 
-            //cuando ya se han leido tweets tienes que empezar a leer desde el max_id para abajo para no leer los mismos tweets, por eso se incluye
-            //max_id
-            if (count > 1){
 
-                console.log("Final latest max_id" + latestMaxID);
-                 twitterParams = { screen_name: twitterAccount,
-                        //Importante: el count solo es un maximo, no necesariamente vas a obtener 200 tweets ya que primero se cuentan los 200 tweets y //luego se quitan los rts y los replies
-                        count:200, //maximo puedes retrieve 200 tweets por request
-                        exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
-                        trim_user: true,
-                        max_id : latestMaxID
-                      };
-            }
+          async.whilst(
+              //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
+              function() { return (twitterContent.contentItems.length < 3200 && !notEnoughTweets && !somethingWrong); },
 
+              function(outerCallback) {
 
-            //Obten un maximo de 200 tweets (los mas recientes) que se han posteado en la cuenta de twitter
-           twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
+                    //cuando ya se han leido tweets tienes que empezar a leer desde el max_id para abajo para no leer los mismos tweets, por eso se incluye
+                    //max_id
+                    if (count > 1){
 
-
-              if (!error) {
-
-                  //Empaqueta los tweets obtenidos en un arreglo de objetos (la configuracion de dicho arreglo es estrictamente especifica para poder ser analizado por el servicio PI de IBM)
-                  async.forEachOf(tweets, function (element, index, innerCallback){
-
-                     if(element.lang == tweetsLang && !element.retweeted){ //solo seleccionar los tweets del idioma especificado por el usuario
-
-                       console.log("Curent_user_retweet : " + element.current_user_retweet);
-                        if (element.in_reply_to_screen_name != null) {
-                            var parentid = element.in_reply_to_user_id;
-                         } else if (element.retweeted && (element.current_user_retweet != null)) {
-                             var parentid = element.current_user_retweet.id_str;
-                         }
+                        console.log("Final latest max_id" + latestMaxID);
+                         twitterParams = { screen_name: twitterAccount,
+                                //Importante: el count solo es un maximo, no necesariamente vas a obtener 200 tweets ya que primero se cuentan los 200 tweets y //luego se quitan los rts y los replies
+                                count:200, //maximo puedes retrieve 200 tweets por request
+                                exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
+                                trim_user: true,
+                                max_id : latestMaxID,
+                                include_rts: false
+                              };
+                    }
 
 
-                       var contentItem = {
-                                            "content": element.text.replace('[^(\\x20-\\x7F)]*',''),
-                                            "id": element.id_str,
-                                            "created": Date.parse(element.created_at),
-                                            "contenttype" : 'text/plain',
-                                            "language": element.lang,
-                                            "reply": element.in_reply_to_screen_name != null,
-                                            "parentid": parentid
-                                         };
+                    //Obten un maximo de 200 tweets (los mas recientes) que se han posteado en la cuenta de twitter
+                   twitter.get('statuses/user_timeline', twitterParams, function(error, tweets, response) {
 
-                       console.log('Content Item:');
-                       console.log('packing tweet number ' + tweetNum);
-                       console.log('id of tweet: ' + contentItem.id);
-                       console.log('content of the tweet: ' + contentItem.content);
-                       console.log('tweet created on: ' + contentItem.created);
-                       console.log('tweet language: ' + contentItem.language);
 
-                       tweetNum = tweetNum + 1;
-                       twitterContent.contentItems.push(contentItem);
-                     }
+                      if (!error) {
 
-                     innerCallback();
+                          //Empaqueta los tweets obtenidos en un arreglo de objetos (la configuracion de dicho arreglo es estrictamente especifica para poder ser analizado por el servicio PI de IBM)
+                          async.forEachOf(tweets, function (element, index, innerCallback){
 
-                   }, function(err){
+                             if(!element.retweeted){ //solo seleccionar los tweets del idioma especificado por el usuario
 
-                        //Terminado de empaquetar esta ronda de tweets, manda a llamar otra iteracion (para ir a buscar otros 200 tweets)
-                        console.log(err);
-                        console.log('finished packing all the tweets for round ' + count);
-                        console.log('Amount of tweets packed until now:' + twitterContent.contentItems.length);
-                        count = count + 1;
+                               console.log("Curent_user_retweet : " + element.current_user_retweet);
+                                if (element.in_reply_to_screen_name != null) {
+                                    var parentid = element.in_reply_to_user_id;
+                                 } else if (element.retweeted && (element.current_user_retweet != null)) {
+                                     var parentid = element.current_user_retweet.id_str;
+                                 }
 
-                        console.log("Latest Max Id: " + latestMaxID);
 
-                        //al pasar Max_ID como parametro estas pidiendo los tweets con id menor o igual a max_id,
-                        //como es inclusive hay que restarle 1 al id para que no se repitan tweets, es necesaria la funcion
-                        //decStrNum porque javascript no puede representar ints con precision de 64 bits
-                        latestMaxID = decStrNum(twitterContent.contentItems[twitterContent.contentItems.length - 1].id);
+                               var contentItem = {
+                                                    "content": element.text.replace('[^(\\x20-\\x7F)]*',''),
+                                                    "id": element.id_str,
+                                                    "created": Date.parse(element.created_at),
+                                                    "contenttype" : 'text/plain',
+                                                    "language": element.lang,
+                                                    "reply": element.in_reply_to_screen_name != null,
+                                                    "parentid": parentid
+                                                 };
 
-                        console.log("New Latest Max Id: " + latestMaxID);
+                               console.log('Content Item ESTO ES DE TWITTER CONTENT NORMAL:');
+                               console.log('packing tweet number ' + tweetNum);
+                               console.log('_____________________________________');
+                               console.log('id: ' + contentItem.id);
+                               console.log('content: ' + contentItem.content);
+                               console.log('created: ' + contentItem.created);
+                               console.log('language: ' + contentItem.language);
+                               console.log('contenttype: ' + contentItem.contenttype);
+                               console.log('_____________________________________');
+                               //console.log('reply: ' + contentItem.reply);
+                              // console.log('parentid: ' + contentItem.parentid);
 
-                        if (latestMaxID != pastMaxID){
-                          pastMaxID = latestMaxID
-                        } else {
-                          notEnoughTweets = true;
-                        }
+                               tweetNum = tweetNum + 1;
+                               twitterContent.contentItems.push(contentItem);
+                             }
 
-                        outerCallback();
+                             innerCallback();
+
+                           }, function(err){
+
+                                //Terminado de empaquetar esta ronda de tweets, manda a llamar otra iteracion (para ir a buscar otros 200 tweets)
+                                console.log(err);
+                                console.log('finished packing all the tweets for round ' + count);
+                                console.log('Amount of tweets packed until now:' + twitterContent.contentItems.length);
+                                count = count + 1;
+
+                                console.log("Latest Max Id: " + latestMaxID);
+
+                                //al pasar Max_ID como parametro estas pidiendo los tweets con id menor o igual a max_id,
+                                //como es inclusive hay que restarle 1 al id para que no se repitan tweets, es necesaria la funcion
+                                //decStrNum porque javascript no puede representar ints con precision de 64 bits
+                                latestMaxID = decStrNum(twitterContent.contentItems[twitterContent.contentItems.length - 1].id);
+
+                                console.log("New Latest Max Id: " + latestMaxID);
+
+                                if (latestMaxID != pastMaxID){
+                                  pastMaxID = latestMaxID
+                                } else {
+                                  notEnoughTweets = true;
+                                }
+
+                                outerCallback();
+
+                              }
+                          );
+
+                      } else { //Si, por ejemplo, la cuenta de twitter a analizar no existe
+
+                          somethingWrong = true;
 
                       }
-                  );
 
-              } else { //Si, por ejemplo, la cuenta de twitter a analizar no existe
+                  });
+              },
 
-                  somethingWrong = true;
+              function (err, n) {
 
-              }
+                  console.log("FINISHED PACKING ALL TWEETS");
+                  console.log()
 
-          });
-      },
+                  //FALTA QUE SIEMPRE TE PERMITA HACER EL ANALISIS Y QUE TE DESPLIEGUE LA FORTALEZA DEL ANALISIS
+                  if (somethingWrong) //if (notEnoughTweets || somethingWrong)
+                  {
+                     if (notEnoughTweets){
 
-      function (err, n) {
+                        console.log("NOT ENOUGH TWEETS IN GENERAL");
+                        var someDate = new Date();
+                        someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
+                        cookieJar.set( "failedTwitterAccount", twitterAccount , { httpOnly: false, expires: someDate} );
+                        cookieJar.set( "tweetsLang", tweetsLang , { httpOnly: false, expires: someDate} );
 
-          console.log("FINISHED PACKING ALL TWEETS");
-          console.log()
+                     } else if (somethingWrong){
 
-          if (somethingWrong) //if (notEnoughTweets || somethingWrong)
-          {
-             if (notEnoughTweets){
+                        console.log("SOMETHING WRONG, MAYBE THE ACCOUNT DOES NOT EXIST");
+                        var someDate = new Date();
+                        someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
+                        cookieJar.set( "somethingWrong", twitterAccount , { httpOnly: false, expires: someDate} );
 
-                console.log("NOT ENOUGH TWEETS IN GENERAL");
-                var someDate = new Date();
-                someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
-                cookieJar.set( "failedTwitterAccount", twitterAccount , { httpOnly: false, expires: someDate} );
-                cookieJar.set( "tweetsLang", tweetsLang , { httpOnly: false, expires: someDate} );
+                     }
 
-             } else if (somethingWrong){
-
-                console.log("SOMETHING WRONG, MAYBE THE ACCOUNT DOES NOT EXIST");
-                var someDate = new Date();
-                someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
-                cookieJar.set( "somethingWrong", twitterAccount , { httpOnly: false, expires: someDate} );
-
-             }
-
-            pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
-                    if(err) throw err;
-                    //console.log(rows == NULL);
-                    console.log(rows.length);
-
-                    if(rows.length == 0){
-                      console.log("\nNO EXISTOOOO\n");
-                      fs.readFile('./public/index2.html', null, function (error,data){
-
-                        if (error){
-                          response.writeHead( 302, { "Location": "./public/error.html" } );
-                          console.log("No file found at location ... index2");
-                          //response.write('File not found! index2');
-                        } else{
-                          response.writeHead(200, {"Content-Type": "text/html"});
-                          response.write(data);
-                        }
-
-                        response.end();
-
-                      });
-                    }
-                    else{
-                      console.log("\nSI EXISTOOOOO\n");
-                      fs.readFile('./public/index.html', null, function (error,data){
-
-                        if (error){
-                          response.writeHead( 302, { "Location": "./public/error.html" } );
-                          console.log("No file found at location ... index");
-                          //response.write('File not found! index');
-                        } else{
-                          response.writeHead(200, {"Content-Type": "text/html"});
-                          response.write(data);
-                        }
-
-                        response.end();
-
-                      });
-                    }
-              });
-
-          } else {
-
-
-
-              var params = {
-                      content: twitterContent, //CAMBIAR A content_items ?
-                      // Content-type: el tipo de archivo a analizar, en este caso plain text
-                      content_type: 'application/json',
-                      content_language: tweetsLang,
-                      include_raw: false
-              };
-
-
-
-                // Envia los parametros a Personality Insights
-                personality_insights.profile(params, function(error, json) {
-                  if (error){
-                    console.log('Error:', error);
-                    response.end();
-                  } else{
-
-                    console.log("WORD COUNT");
-                      console.log(json.word_count);
-                     var valuesFromSelection = [];
-                     var id = 0;
-
-                     //Guarda el json en un archivo .txt dentro del servidor que este corriendo esta aplicacion web
-                    fs.exists('documents/analisisPI.txt', function(exists){
-                      if(exists){
-                          console.log("yes file exists");
-                          //fs.appendFile('analisisPI.txt', json);
-
-                           fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
-                              if (err) return console.log(err);
-                              console.log('successfully appended new line');
-                           });
-
-                           fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
-                              if (err) return console.log(err);
-                              console.log('successfully appended json info');
-                          });
-                       } else {
-                          console.log("file not exists")
-                          //fs.appendFile('analisisPI.txt', json);
-                          fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
-                              if (err) return console.log(err);
-                              console.log('successfully appended json info');
-                          });
-                       }
-                    });
-
-
-
-                    //Create profile in database
-                    pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+                    pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
                             if(err) throw err;
-                            console.log('PERFIL CREADO');
+                            //console.log(rows == NULL);
+                            console.log(rows.length);
 
-                            //Sacar el id
-                            pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
-                                      var papasCreados = 0;
-                                      if(err) throw err;
-                                      valuesFromSelection = rows;
-                                      //console.log(valuesFromSelection[0].id); //Imprime id
-                                      id = valuesFromSelection[0].id;
-                                      //Insertar los 5 big_5
-                                      for (var iA = 0; iA < 5; iA++) {
-                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
-                                                if(err) throw err;
-                                                //console.log("Big Five Creado");
-                                                papasCreados++; //papa = 1 big_5
-                                                //console.log(papasCreados);
+                            if(rows.length == 0){
+                              console.log("\nNO EXISTOOOO\n");
+                              fs.readFile('./public/index2.html', null, function (error,data){
 
-                                                //Inserta los hijos de cada big_5, una vez que estos 5 ya fueron creados
-                                                if(papasCreados>=5){
-                                                  console.log("YA VOY A CREAR LOS HIJOS");
-                                                    for(iA = 0; iA<5; iA++){
-                                                    for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
-                                                      console.log("\n"+json.personality[iA].name+"\n");
-                                                      console.log( json.personality[iA].children[iB].trait_id );
-                                                      console.log( json.personality[iA].children[iB].name);
-                                                      console.log( json.personality[iA].children[iB].percentile);
-                                                      console.log( json.personality[iA].children[iB].category);
-                                                      console.log( json.personality[iA].trait_id);
+                                if (error){
+                                  response.writeHead( 302, { "Location": "./public/error.html" } );
+                                  console.log("No file found at location ... index2");
+                                  //response.write('File not found! index2');
+                                } else{
+                                  response.writeHead(200, {"Content-Type": "text/html"});
+                                  response.write(data);
+                                }
 
-                                                    pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
-                                                    + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
-                                                    + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
-                                                              if(err) throw err;
-                                                              console.log('Children Created');
-                                                      });
-                                                    }
-                                                  }
-                                              }
-                                        });
-                                      }
-                                      //Save needs in database
-                                      for (var iC = 0; iC < json.needs.length; iC++) {
-                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
-                                        + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
-                                        + "'," + id + ", NULL);",function(err,rows){
-                                                  if(err) throw err;
-                                                  console.log('NEED Created');
-                                          });
-                                      }
-
-                                      //Save values in database
-                                      for (var iD = 0; iD < json.values.length; iD++) {
-                                        pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
-                                        + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
-                                        + "'," + id + ", NULL);",function(err,rows){
-                                                  if(err) throw err;
-                                                  console.log('VALUE Created');
-                                          });
-                                      }
-
-
-                                      fs.readFile('./public/index.html', null, function (error,data){
-
-                                            if (error){
-                                              response.writeHead( 302, { "Location": "./public/error.html" } );
-                                              console.log("No file found at location ... index");
-                                              //response.write('File not found! index');
-                                            } else{
-                                              response.writeHead(200, {"Content-Type": "text/html"});
-                                              response.write(data);
-                                            }
-
-                                            response.end();
-
-                                    });
-
-
+                                response.end();
 
                               });
-                    });
+                            }
+                            else{
+                              console.log("\nSI EXISTOOOOO\n");
+                              fs.readFile('./public/index.html', null, function (error,data){
+
+                                if (error){
+                                  response.writeHead( 302, { "Location": "./public/error.html" } );
+                                  console.log("No file found at location ... index");
+                                  //response.write('File not found! index');
+                                } else{
+                                  response.writeHead(200, {"Content-Type": "text/html"});
+                                  response.write(data);
+                                }
+
+                                response.end();
+
+                              });
+                            }
+                      });
+
+                  } else {
+
+        //=====================================================================================================================
+        // ESCRIBIR EN UN TXT EL CONTENIDO DEL JSON DE LOS TWEETS
+        //=====================================================================================================================
+                      // fs.exists('documents/twitterData.txt', function(exists){
+                      //   if(exists){
+                      //       console.log("yes file exists");
+                      //       //fs.appendFile('analisisPI.txt', json);
+                      //
+                      //        fs.appendFile('documents/twitterData.txt', '\r\n', function (err) {
+                      //           if (err) return console.log(err);
+                      //           console.log('successfully appended new line');
+                      //        });
+                      //
+                      //        fs.appendFile('documents/twitterData.txt', JSON.stringify(twitterContent), function (err) {
+                      //           if (err) return console.log(err);
+                      //           console.log('successfully appended json info');
+                      //       });
+                      //    } else {
+                      //       console.log("file not exists")
+                      //       //fs.appendFile('analisisPI.txt', json);
+                      //       fs.appendFile('documents/twitterData.txt', JSON.stringify(twitterContent), function (err) {
+                      //           if (err) return console.log(err);
+                      //           console.log('successfully appended json info');
+                      //       });
+                      //    }
+                      // });
+        //=====================================================================================================================
+        //=====================================================================================================================
+
+                      var params = {
+                              content: twitterContent,
+                              // Content-type: el tipo de archivo a analizar, en este caso plain text
+                              content_type: 'application/json',
+                              content_language: tweetsLang,
+                              include_raw: false
+                      };
+
+
+
+                        // Envia los parametros a Personality Insights
+                        personality_insights.profile(params, function(error, json) {
+                          if (error){
+                            console.log('Error:', error);
+                            response.end();
+                          } else{
+
+                            console.log("WORD COUNT");
+                              console.log(json.word_count);
+                             var valuesFromSelection = [];
+                             var id = 0;
+
+                             //Guarda el json en un archivo .txt dentro del servidor que este corriendo esta aplicacion web
+                            fs.exists('documents/analisisPI.txt', function(exists){
+                              if(exists){
+                                  console.log("yes file exists");
+                                  //fs.appendFile('analisisPI.txt', json);
+
+                                   fs.appendFile('documents/analisisPI.txt', '\r\n', function (err) {
+                                      if (err) return console.log(err);
+                                      console.log('successfully appended new line');
+                                   });
+
+                                   fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
+                                      if (err) return console.log(err);
+                                      console.log('successfully appended json info');
+                                  });
+                               } else {
+                                  console.log("file not exists")
+                                  //fs.appendFile('analisisPI.txt', json);
+                                  fs.appendFile('documents/analisisPI.txt', JSON.stringify(json), function (err) {
+                                      if (err) return console.log(err);
+                                      console.log('successfully appended json info');
+                                  });
+                               }
+                            });
+
+
+
+                            //Create profile in database
+                            pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+                                    if(err) throw err;
+                                    console.log('PERFIL CREADO');
+
+                                    //Sacar el id
+                                    pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
+                                              var papasCreados = 0;
+                                              if(err) throw err;
+                                              valuesFromSelection = rows;
+                                              //console.log(valuesFromSelection[0].id); //Imprime id
+                                              id = valuesFromSelection[0].id;
+                                              //Insertar los 5 big_5
+                                              for (var iA = 0; iA < 5; iA++) {
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
+                                                        if(err) throw err;
+                                                        //console.log("Big Five Creado");
+                                                        papasCreados++; //papa = 1 big_5
+                                                        //console.log(papasCreados);
+
+                                                        //Inserta los hijos de cada big_5, una vez que estos 5 ya fueron creados
+                                                        if(papasCreados>=5){
+                                                          console.log("YA VOY A CREAR LOS HIJOS");
+                                                            for(iA = 0; iA<5; iA++){
+                                                            for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
+                                                              console.log("\n"+json.personality[iA].name+"\n");
+                                                              console.log( json.personality[iA].children[iB].trait_id );
+                                                              console.log( json.personality[iA].children[iB].name);
+                                                              console.log( json.personality[iA].children[iB].percentile);
+                                                              console.log( json.personality[iA].children[iB].category);
+                                                              console.log( json.personality[iA].trait_id);
+
+                                                            pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
+                                                            + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
+                                                            + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
+                                                                      if(err) throw err;
+                                                                      console.log('Children Created');
+                                                              });
+                                                            }
+                                                          }
+                                                      }
+                                                });
+                                              }
+                                              //Save needs in database
+                                              for (var iC = 0; iC < json.needs.length; iC++) {
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
+                                                + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
+                                                + "'," + id + ", NULL);",function(err,rows){
+                                                          if(err) throw err;
+                                                          console.log('NEED Created');
+                                                  });
+                                              }
+
+                                              //Save values in database
+                                              for (var iD = 0; iD < json.values.length; iD++) {
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
+                                                + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
+                                                + "'," + id + ", NULL);",function(err,rows){
+                                                          if(err) throw err;
+                                                          console.log('VALUE Created');
+                                                  });
+                                              }
+
+
+                                              fs.readFile('./public/index.html', null, function (error,data){
+
+                                                    if (error){
+                                                      response.writeHead( 302, { "Location": "./public/error.html" } );
+                                                      console.log("No file found at location ... index");
+                                                      //response.write('File not found! index');
+                                                    } else{
+                                                      response.writeHead(200, {"Content-Type": "text/html"});
+                                                      response.write(data);
+                                                    }
+
+                                                    response.end();
+
+                                            });
+
+
+
+                                      });
+                            });
+
+
+                          }
+                        }); //AQUI TERMINA LA FUNCION DE PERSONALITY INSIGHTS
 
 
                   }
-                }); //AQUI TERMINA LA FUNCION DE PERSONALITY INSIGHTS
-
-
-          }
 
 
 
 
-      }
+              }
 
-  );
+          );
 
 
+  //=====================================================================================================================
+  //=====================================================================================================================
 }
 
 
