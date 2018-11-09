@@ -386,12 +386,6 @@ console.log("Request handler 'piService' was called.");
  twitter.get('oauth/authorize', {force_login:true}, function(error, tweets, response) {
  });*/
 
- //API twitter how to do  a request:  https://developer.twitter.com/en/docs/tweets/timelines/overview
- //How to transverse a timeline https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
- // https://medium.com/ibm-watson-tutorials/getting-started-with-ibm-watson-personality-insights-2-3d0260926519
-//http://2ality.com/2012/07/large-integers.html necesitas id_str
-// https://console.bluemix.net/docs/services/personality-insights/input.html#input
-
 
   console.log("Request handler 'piServiceTwitter' was called.");
 
@@ -432,57 +426,9 @@ console.log("Request handler 'piService' was called.");
   var notEnoughTweets = false;
   var somethingWrong = false;
 
-        //=====================================================================================================================
-        // ESTO ES SOLO PARA VER SI CON LOS TWEETS DE OPRAH HARDCODEADOS (SIN LLAMAR TWITTER API) DA IGUAL AL DEMO
-        //SI DA IGUAL AL DEMO
-        //=====================================================================================================================
-
-          // var twitterContent2 = {
-          //               "contentItems":[]
-          //             };
-          //
-          // for(var i = 0; i < tweets2.length; i++){
-          //   if(tweets2[i].lang == tweetsLang && !tweets2[i].retweeted){ //solo seleccionar los tweets del idioma especificado por el usuario
-          //
-          //      if (tweets2[i].in_reply_to_screen_name != null) {
-          //          var parentid = tweets2[i].in_reply_to_user_id;
-          //       } else if (tweets2[i].retweeted && (tweets2[i].current_user_retweet != null)) {
-          //           var parentid = tweets2[i].current_user_retweet.id_str;
-          //       }
-          //
-          //
-          //     var contentItem = {
-          //                          "content": tweets2[i].text.replace('[^(\\x20-\\x7F)]*',''),
-          //                          "id": tweets2[i].id_str,
-          //                          "created": Date.parse(tweets2[i].created_at),
-          //                          "contenttype" : 'text/plain',
-          //                          "language": tweets2[i].lang,
-          //                          "reply": tweets2[i].in_reply_to_screen_name != null,
-          //                          "parentid": parentid
-          //                       };
-          //
-          //     console.log('Content Item:');
-          //     console.log('packing tweet number ' + tweetNum);
-          //     console.log('_____________________________________');
-          //     console.log('id: ' + contentItem.id);
-          //     console.log('content: ' + contentItem.content);
-          //     console.log('created: ' + contentItem.created);
-          //     console.log('language: ' + contentItem.language);
-          //     console.log('contenttype: ' + contentItem.contenttype);
-          //     console.log('_____________________________________');
-          //     //console.log('reply: ' + contentItem.reply);
-          //    // console.log('parentid: ' + contentItem.parentid);
-          //
-          //     tweetNum = tweetNum + 1;
-          //     twitterContent2.contentItems.push(contentItem);
-          //   }
-          // }
-        //=====================================================================================================================
-        //=====================================================================================================================
-
 
           async.whilst(
-              //Mientras aun no esten empaquetados al menos 1000 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
+              //Mientras aun no esten empaquetados al menos 3200 tweets de la cuenta de Twitter que se esté analizando, y mientras a dicha cuenta aun le queden tweets
               function() { return (twitterContent.contentItems.length < 3200 && !notEnoughTweets && !somethingWrong); },
 
               function(outerCallback) {
@@ -493,9 +439,8 @@ console.log("Request handler 'piService' was called.");
 
                         console.log("Final latest max_id" + latestMaxID);
                          twitterParams = { screen_name: twitterAccount,
-                                //Importante: el count solo es un maximo, no necesariamente vas a obtener 200 tweets ya que primero se cuentan los 200 tweets y //luego se quitan los rts y los replies
-                                count:200, //maximo puedes retrieve 200 tweets por request
-                                exclude_replies : true, // EN EL DEMO NO INCLUYEN REPLIES
+                                count:200,
+                                exclude_replies : true,
                                 trim_user: true,
                                 max_id : latestMaxID,
                                 include_rts: false
@@ -541,8 +486,6 @@ console.log("Request handler 'piService' was called.");
                                console.log('language: ' + contentItem.language);
                                console.log('contenttype: ' + contentItem.contenttype);
                                console.log('_____________________________________');
-                               //console.log('reply: ' + contentItem.reply);
-                              // console.log('parentid: ' + contentItem.parentid);
 
                                tweetNum = tweetNum + 1;
                                twitterContent.contentItems.push(contentItem);
@@ -654,35 +597,6 @@ console.log("Request handler 'piService' was called.");
                       });
 
                   } else {
-
-        //=====================================================================================================================
-        // ESCRIBIR EN UN TXT EL CONTENIDO DEL JSON DE LOS TWEETS
-        //=====================================================================================================================
-                      // fs.exists('documents/twitterData.txt', function(exists){
-                      //   if(exists){
-                      //       console.log("yes file exists");
-                      //       //fs.appendFile('analisisPI.txt', json);
-                      //
-                      //        fs.appendFile('documents/twitterData.txt', '\r\n', function (err) {
-                      //           if (err) return console.log(err);
-                      //           console.log('successfully appended new line');
-                      //        });
-                      //
-                      //        fs.appendFile('documents/twitterData.txt', JSON.stringify(twitterContent), function (err) {
-                      //           if (err) return console.log(err);
-                      //           console.log('successfully appended json info');
-                      //       });
-                      //    } else {
-                      //       console.log("file not exists")
-                      //       //fs.appendFile('analisisPI.txt', json);
-                      //       fs.appendFile('documents/twitterData.txt', JSON.stringify(twitterContent), function (err) {
-                      //           if (err) return console.log(err);
-                      //           console.log('successfully appended json info');
-                      //       });
-                      //    }
-                      // });
-        //=====================================================================================================================
-        //=====================================================================================================================
 
                       var params = {
                               content: twitterContent,
