@@ -474,65 +474,122 @@ function getImportantText(dataReceived) {
 
                     // // SQUARE CHARTS ENDS //
 
-                    // BUBBLE CHARTS STARTS //
+                    // Bar CHARTS STARTS //
                     //Grafica de necesidades   var myChart = new Chart
-                    var necesidades = document.getElementById("container3").getContext('2d');
-                    var myChart = new Chart(necesidades, {
-                    type: 'bar',
-                    data: {
-                        labels: ["Desafío", "Proximidad", "Curiosidad", "Entusiasmo", "Armonía", "Ideales", "Libertad", "Amor", "Uso práctico", "Autoexpresión", "Estabilidad","Estructura"],
-                        datasets: [{
-                            label: 'Necesidades',
-                            data: [dataReceived.needs[0].percentile*100,
-                                   dataReceived.needs[1].percentile*100,
-                                   dataReceived.needs[2].percentile*100,
-                                   dataReceived.needs[3].percentile*100,
-                                   dataReceived.needs[4].percentile*100,
-                                   dataReceived.needs[5].percentile*100,
-                                   dataReceived.needs[6].percentile*100,
-                                   dataReceived.needs[7].percentile*100,
-                                   dataReceived.needs[8].percentile*100,
-                                   dataReceived.needs[9].percentile*100,
-                                   dataReceived.needs[10].percentile*100,
-                                   dataReceived.needs[11].percentile*100],
-                            backgroundColor: ['rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            'rgba(125, 187, 195, 0.7)',
-                            ],
-                            borderColor: [ 'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            'rgba(125, 187, 195, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
+                //     var necesidades = document.getElementById("container3").getContext('2d');
+                //     var myChart = new Chart(necesidades, {
+                //     type: 'bar',
+                //     data: {
+                //         labels: ["Desafío", "Proximidad", "Curiosidad", "Entusiasmo", "Armonía", "Ideales", "Libertad", "Amor", "Uso práctico", "Autoexpresión", "Estabilidad","Estructura"],
+                //         datasets: [{
+                //             label: 'Necesidades',
+                //             data: [dataReceived.needs[0].percentile*100,
+                //                    dataReceived.needs[1].percentile*100,
+                //                    dataReceived.needs[2].percentile*100,
+                //                    dataReceived.needs[3].percentile*100,
+                //                    dataReceived.needs[4].percentile*100,
+                //                    dataReceived.needs[5].percentile*100,
+                //                    dataReceived.needs[6].percentile*100,
+                //                    dataReceived.needs[7].percentile*100,
+                //                    dataReceived.needs[8].percentile*100,
+                //                    dataReceived.needs[9].percentile*100,
+                //                    dataReceived.needs[10].percentile*100,
+                //                    dataReceived.needs[11].percentile*100],
+                //             backgroundColor: ['rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             'rgba(125, 187, 195, 0.7)',
+                //             ],
+                //             borderColor: [ 'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             'rgba(125, 187, 195, 1)',
+                //             ],
+                //             borderWidth: 1
+                //         }]
+                //     },
+                //     options: {
+                //         scales: {
+                //             yAxes: [{
+                //                 ticks: {
+                //                     beginAtZero:true
+                //                 }
+                //             }]
+                //         }
+                //     }
+                // });
+
+                //BAR GRAPH DE HIGH CHARTS
+                Highcharts.chart('container3', {
+                    chart: {
+                        type: 'column'
                     },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
+                    title: {
+                        text: 'Necesidades'
+                    },
+                    xAxis: {
+                        categories: ["Desafío", "Proximidad", "Curiosidad", "Entusiasmo", "Armonía", "Ideales", "Libertad", "Amor", "Uso práctico", "Autoexpresión", "Estabilidad","Estructura"],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Percentile (%)'
                         }
-                    }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true, //para que se muestre el bar value 
+                                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
+                                format: '{point.y:,.2f}',
+                                style: {
+                                    //textShadow: '0 0 3px black'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Tus necesidades',
+                        data: [dataReceived.needs[0].percentile*100,
+                               dataReceived.needs[1].percentile*100,
+                               dataReceived.needs[2].percentile*100,
+                               dataReceived.needs[3].percentile*100,
+                               dataReceived.needs[4].percentile*100,
+                               dataReceived.needs[5].percentile*100,
+                               dataReceived.needs[6].percentile*100,
+                               dataReceived.needs[7].percentile*100,
+                               dataReceived.needs[8].percentile*100,
+                               dataReceived.needs[9].percentile*100,
+                               dataReceived.needs[10].percentile*100,
+                               dataReceived.needs[11].percentile*100]
+                    }]
                 });
 
 
