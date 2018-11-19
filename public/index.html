@@ -64,7 +64,7 @@
             <p class="message">Los valores mostrados en las gráficas representan percentiles. Muestran una comparación entre tus resultados con los de una poblacion más amplia. Una persona con 90% en el rasgo de Extroversión significa que es más extrovertida que el 90% de la población.</p>
           </div>
             <div class="col s12 m5" style="margin-right: 30px" >
-                <h5 class="header" id="headerDescripcion">Descripción</h5>
+                <h5 class="header" id="headerDescripcion">Tendencia</h5>
                 <div class="row" style="font-size:17px">
                   <div class="col s12 m12 l12">
                     <div id="insightsDescription">Cargando...</div>
@@ -72,6 +72,7 @@
                 </div>
                 <div style="width:24em;">
                     <a href="/Subir" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Realizar nuevo análisis</a>
+                    <a href="" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn" onClick="window.print()">Descargar PDF</a>
                     <form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
 
                         <label>Cuenta de Twitter:</label>
@@ -81,7 +82,7 @@
                            <option value = "es">Español</option>
                         </select>
                         <br>
-                        <p class="nota">*Se necesitan mínimo 200 tweets sin incluir retweets.</p>
+                        <p class="nota"></p>
                         <div id="botonesTwitter">
                           <input class="deep-purple darken-1 btn" type="submit" value ="Analizar">
                           <button class="red darken-2 btn" id="close-twitter">Cerrar</button>
