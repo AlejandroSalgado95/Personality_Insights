@@ -272,7 +272,8 @@ function piServiceEssay(response,postData, cookieJar){
          }
       });
 
-
+      //AGREGADO
+      //response.setHeader("Content-Disposition", "attachment; filename=\"" + "./documents/analisisPI.txt" + "\"");
 
       //Create profile in database
       pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
