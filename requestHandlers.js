@@ -272,7 +272,7 @@ function piServiceEssay(response,postData, cookieJar){
          }
       });
 
-      //AGREGADO
+      //Para que se descargue el txt con el json, no jala
       //response.setHeader("Content-Disposition", "attachment; filename=\"" + "./documents/analisisPI.txt" + "\"");
 
       //Create profile in database
