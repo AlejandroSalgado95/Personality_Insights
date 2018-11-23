@@ -41,7 +41,7 @@ $(document).ready(function()
 });
 
 //Descargar reporte como pdf
-$('#descargar').on("click", function(event){
+$('#descPDF').on("click", function(event){
   event.preventDefault();
   console.log("entro a descargar");
 
@@ -61,6 +61,41 @@ $('#descargar').on("click", function(event){
 
 
   //save_chart($('#container3').highcharts());
+
+  var chart = $('#container3').highcharts();
+
+  var render_width = 1000;
+  var render_height = render_width * chart.chartHeight / 	chart.chartWidth
+
+  // Get the cart's SVG code
+  var svg = chart.getSVG({
+      exporting: {
+          sourceWidth: chart.chartWidth,
+          sourceHeight: chart.chartHeight
+      }
+  });
+
+  // Create a canvas
+  var canvas = document.createElement('canvas');
+  canvas.height = render_height;
+  canvas.width = render_width;
+//  document.body.appendChild(canvas);
+
+  // Create an image and draw the SVG onto the canvas
+  var image = new Image;
+  image.onload = function() {
+      canvas.getContext('2d').drawImage(this, 0, 0, render_width, render_height);
+  };
+  image.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
+
+  var data = canvas.toDataURL("image/png");
+
+  console.log(data);
+
+  var doc = new jsPDF('p', 'pt', 'a4');
+  doc.addImage(data, 'PNG', 40, 40, 75, 75);
+  //doc.save('test.pdf');
+
 });
 
 //convertir svg de highcharts a canvas para poderlo descargar con jsPDF

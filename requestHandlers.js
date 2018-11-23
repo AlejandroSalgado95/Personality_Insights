@@ -14,8 +14,8 @@ var async = require("async");  //modulo para utilizar funciones asincronas (ej. 
 //      que el servidor nos esté prestando, y dicha base de datos sera util para esta aplicacion web
 //Servidor MySQL provisto por: Gearhost.com
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
 
+//BASE De datos de prueba
 var pool  = mysql.createPool({
  connectionLimit : 10,
  host            : 'den1.mysql2.gear.host',
@@ -24,11 +24,20 @@ var pool  = mysql.createPool({
  database        : 'piapplicationdb'
 });
 
-//Parametros para conectarse a la base de datos de digital ocean,
+//Parametros para conectarse a la base de datos de digital ocean desde fuera del servidor
 //falta habilitar que el servidor acepte conexiones que no sean de localhost
 // var pool  = mysql.createPool({
 //  connectionLimit : 10,
 //  host            : '104.131.75.96',
+//  user            : 'root',
+//  password        : 'b930f62a8d513ae4962f7c37433aa263482f343d9ef60e77',
+//  database        : 'MostlaPI'
+// });
+
+//Parametros para conectarse a la base de datos de digital ocean estando en el servidor,
+// var pool  = mysql.createPool({
+//  connectionLimit : 10,
+//  host            : 'localhost',
 //  user            : 'root',
 //  password        : 'b930f62a8d513ae4962f7c37433aa263482f343d9ef60e77',
 //  database        : 'MostlaPI'
@@ -272,16 +281,15 @@ function piServiceEssay(response,postData, cookieJar){
          }
       });
 
-      //Para que se descargue el txt con el json, no jala
-      //response.setHeader("Content-Disposition", "attachment; filename=\"" + "./documents/analisisPI.txt" + "\"");
+
 
       //Create profile in database
-      pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+      pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
               if(err) throw err;
               console.log('PERFIL CREADO');
 
               //Sacar el id
-              pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
+              pool.query("SELECT id FROM Profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
                         var papasCreados = 0;
                         if(err) throw err;
                         valuesFromSelection = rows;
@@ -556,7 +564,7 @@ console.log("Request handler 'piService' was called.");
 
                      }
 
-                    pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
+                    pool.query("SELECT id FROM Profile WHERE id_User = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
                             if(err) throw err;
                             //console.log(rows == NULL);
                             console.log(rows.length);
@@ -649,12 +657,12 @@ console.log("Request handler 'piService' was called.");
 
 
                             //Create profile in database
-                            pool.query("INSERT INTO Profile (name,word_count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+                            pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
                                     if(err) throw err;
                                     console.log('PERFIL CREADO');
 
                                     //Sacar el id
-                                    pool.query("SELECT id FROM profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
+                                    pool.query("SELECT id FROM Profile WHERE id_User = '" + id_user + "' ORDER BY id desc LIMIT 1;",function(err,rows){
                                               var papasCreados = 0;
                                               if(err) throw err;
                                               valuesFromSelection = rows;
@@ -771,11 +779,11 @@ function lastProfile(response,postData, cookieJar){
   //Query SELECT con name y id_user
   var arraySelects = [];
   var currentID;
-  pool.query("SELECT id FROM profile WHERE id_user='"+id_user+"' order by id desc LIMIT 1;", function (err, result) {
+  pool.query("SELECT id FROM Profile WHERE id_User='"+id_user+"' order by id desc LIMIT 1;", function (err, result) {
       if (err) throw err;
       arraySelects = result;
       currentID = arraySelects[0].id;
-      pool.query("select trait_id, percentile from trait t join profile p ON t.profile_id = p.id where (t.trait_id = 'big5_agreeableness' or t.trait_id = 'big5_openness' or t.trait_id = 'big5_conscientiousness' or t.trait_id = 'big5_extraversion' or t.trait_id = 'big5_neuroticism') and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
+      pool.query("SELECT trait_id, percentile FROM Trait t join Profile p ON t.profile_id = p.id WHERE (t.trait_id = 'big5_agreeableness' or t.trait_id = 'big5_openness' or t.trait_id = 'big5_conscientiousness' or t.trait_id = 'big5_extraversion' or t.trait_id = 'big5_neuroticism') and p.id = '"+currentID+"'ORDER BY t.trait_id ASC;", function (err, result, fields) {
           if (err) throw err;
 
           //response.writeHead(200, {"Content-Type": "application/json"});
@@ -785,13 +793,13 @@ function lastProfile(response,postData, cookieJar){
               personalityArray.push({percentile: result[i].percentile});
           }
 
-          pool.query("select trait_id, percentile from trait t join profile p ON t.profile_id = p.id where t.category='needs' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
+          pool.query("select trait_id, percentile from Trait t join Profile p ON t.profile_id = p.id where t.category='needs' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
               if (err) throw err;
               var needsArray = [];
               for (var i = 0;i < result.length; i++) {
                   needsArray.push({percentile: result[i].percentile});
               }
-              pool.query("select trait_id, percentile from trait t join profile p ON t.profile_id = p.id where t.category='values' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
+              pool.query("select trait_id, percentile from Trait t join Profile p ON t.profile_id = p.id where t.category='values' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
                   if (err) throw err;
                   var valuesArray = [];
                   for (var i = 0;i < result.length; i++) {
@@ -841,7 +849,7 @@ function loginAction(response, postData, cookieJar){
     var nextPage = "";
 
     //Busca si el usuario tiene guardado en la base de datos algun analisis de personalidad
-    pool.query("SELECT id FROM Profile WHERE id_user = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
+    pool.query("SELECT id FROM Profile WHERE id_User = '"+id_user+"' order by id desc LIMIT 1;",function(err,rows){
               if(err) throw err;
               //console.log(rows == NULL);
               console.log(rows.length);
