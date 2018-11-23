@@ -474,7 +474,7 @@ function getImportantText(dataReceived) {
 
                     // // SQUARE CHARTS ENDS //
 
-                    // Bar CHARTS STARTS //
+                    // BARCHART de Chartjs Necesidades //
                     //Grafica de necesidades   var myChart = new Chart
                 //     var necesidades = document.getElementById("container3").getContext('2d');
                 //     var myChart = new Chart(necesidades, {
@@ -535,7 +535,7 @@ function getImportantText(dataReceived) {
                 //     }
                 // });
 
-                //BAR GRAPH DE HIGH CHARTS
+                //BAR GRAPH NECESIDADES
                 Highcharts.chart('container3', {
                     chart: {
                         type: 'column'
@@ -553,20 +553,21 @@ function getImportantText(dataReceived) {
                             text: 'Percentile (%)'
                         }
                     },
-                    tooltip: {
-                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                        footerFormat: '</table>',
-                        shared: true,
-                        useHTML: true
+                    tooltip: { //tooltip es la caja con info que sale al dar hover sobre un bar
+                          enabled: false
+                        // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        // pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        //     '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                        // footerFormat: '</table>',
+                        // shared: true,
+                        // useHTML: true
                     },
                     plotOptions: {
                         column: {
                             pointPadding: 0.2,
                             borderWidth: 0,
                             dataLabels: {
-                                enabled: true, //para que se muestre el bar value 
+                                enabled: true, //para que se muestre el bar value
                                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
                                 format: '{point.y:,.2f}',
                                 style: {
@@ -591,83 +592,6 @@ function getImportantText(dataReceived) {
                                dataReceived.needs[11].percentile*100]
                     }]
                 });
-
-
-
-                    // Highcharts.chart('container3', {
-                    //
-                    //   chart: {
-                    //     type: 'bubble',
-                    //     plotBorderWidth: 1,
-                    //     zoomType: 'xy'
-                    //   },
-                    //
-                    //   legend: {
-                    //     enabled: false
-                    //   },
-                    //
-                    //   title: {
-                    //     text: ''
-                    //   },
-                    //
-                    //   xAxis: {
-                    //     gridLineWidth: 0,
-                    //     tickColor: 'white',
-                    //     title: null,
-                    //     labels: {
-                    //       enabled: false
-                    //     },
-                    //   },
-                    //
-                    //   yAxis: {
-                    //     gridLineWidth: 0,
-                    //     startOnTick: false,
-                    //     endOnTick: false,
-                    //     title: null,
-                    //     labels: {
-                    //       enabled: false
-                    //     },
-                    //     maxPadding: 0.2,
-                    //   },
-                    //
-                    //   tooltip: {
-                    //     useHTML: true,
-                    //     headerFormat: '<table>',
-                    //     pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
-                    //       '<tr><th></th><td>{point.z}%</td></tr>',
-                    //     footerFormat: '</table>',
-                    //     followPointer: true
-                    //   },
-                    //
-                    //   plotOptions: {
-                    //     series: {
-                    //       dataLabels: {
-                    //         enabled: true,
-                    //         format: '{point.name}'
-                    //       }
-                    //     }
-                    //   },
-                    //
-                    //   series: [{
-                    //     data: [
-                    //       { x: 0, y: 0, z: Math.round(dataReceived.needs[0].percentile*100), name: 'Retos', country: 'Retos', color: '#FF5722' },
-                    //       { x: 5, y: 5, z: Math.round(dataReceived.needs[1].percentile*100), name: 'Reservarse', country: 'Reservarse', color: '#FF9800'},
-                    //       { x: 10, y: 10, z: Math.round(dataReceived.needs[2].percentile*100), name: 'Curiosidad', country: 'Curiosidad', color: '#E91E63'},
-                    //       { x: 15, y: 15, z: Math.round(dataReceived.needs[3].percentile*100), name: 'Emoción', country: 'Emoción', color: '#FFEB3B'},
-                    //       { x: 20, y: 20, z: Math.round(dataReceived.needs[4].percentile*100), name: 'Armonía', country: 'Armonía', color: '#673AB7'},
-                    //       { x: 25, y: 25, z: Math.round(dataReceived.needs[5].percentile*100), name: 'Ideales', country: 'Ideales', color: '#8BC34A'},
-                    //       { x: 30, y: 30, z: Math.round(dataReceived.needs[6].percentile*100), name: 'Libertad', country: 'Libertad', color: '#4CAF50'},
-                    //       { x: 35, y: 35, z: Math.round(dataReceived.needs[7].percentile*100), name: 'Amor', country: 'Amor', color: '#009688'},
-                    //       { x: 40, y: 40, z: Math.round(dataReceived.needs[8].percentile*100), name: 'Práctico', country: 'Práctico', color: '#00BCD4'},
-                    //       { x: 45, y: 45, z: Math.round(dataReceived.needs[9].percentile*100), name: 'Expresivo', country: 'Expresivo', color: '#9C27B0'},
-                    //       { x: 50, y: 50, z: Math.round(dataReceived.needs[10].percentile*100), name: 'Estabilidad', country: 'Estabilidad', color: '#2196F3'},
-                    //       { x: 55, y: 55, z: dataReceived.needs[11].percentile*100, name: 'Estructura', country: 'Estructura', color: '#3F51B5'},
-                    //     ]
-                    //   }]
-                    //
-                    // });
-
-                    // BUBBLE CHARTS ENDS //
 
             }
 
