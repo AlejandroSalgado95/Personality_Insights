@@ -9,6 +9,7 @@ CREATE TABLE Profile(
 	processed_Language VARCHAR(2) NOT NULL,
 	id_User VARCHAR(45) NOT NULL,
 	fecha DATETIME,
+	completeJson TEXT,
 	PRIMARY KEY (id)
 );
 
@@ -19,7 +20,7 @@ CREATE TABLE Trait(
 	percentile FLOAT NOT NULL,
 	category VARCHAR(20) NOT NULL,
 	profile_id INT NOT NULL,
-	child_Of VARCHAR(50), 
+	child_Of VARCHAR(50),
 	FOREIGN KEY (profile_id) references Profile(id),
 	FOREIGN KEY (child_Of) references Trait(trait_id),
 	constraint PK_ALGO primary key (trait_id, profile_id)

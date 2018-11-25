@@ -212,6 +212,29 @@ function uploadPage(response, postData, cookieJar) {
   });
 }
 
+function fullReportJson(response,postData, cookieJar){
+
+  //Incrementa en media hora la fecha de caducidad de la cookie que ya estaba guardada
+  var name = cookieJar.get("name");
+  var id_user = cookieJar.get("email");
+
+  var someDate = new Date();
+  someDate.setTime(someDate.getTime() + (30*60*1000) ) ; // 30 minutes in milliseconds
+
+  cookieJar.set( "email", id_user , { httpOnly: false, expires: someDate} );
+  cookieJar.set( "name", name , { httpOnly: false, expires: someDate} );
+
+  pool.query("SELECT completeJson FROM Profile WHERE id_User='"+id_user+"' order by id desc LIMIT 1;", function (err, result) {
+      if (err) throw err;
+
+      var json = result[0]["completeJson"];
+
+      response.writeHead(200, {"Content-Type": "application/json"});
+      response.end(json);
+
+    });
+
+}
 
 
 function piServiceEssay(response,postData, cookieJar){
@@ -241,7 +264,9 @@ function piServiceEssay(response,postData, cookieJar){
       content: querystring.parse(postData).textAreaContent,
       // Content-type: el tipo de archivo a analizar, en este caso plain text
       content_type: 'text/plain;charset=utf-8',
-      content_language: querystring.parse(postData).idiomaEnsayo //idioma ensayo es el valor del select del idioma
+      content_language: querystring.parse(postData).idiomaEnsayo, //idioma ensayo es el valor del select del idioma
+      consumption_preferences: true,
+      raw_scores: true
       //en
   };
 
@@ -282,9 +307,11 @@ function piServiceEssay(response,postData, cookieJar){
       });
 
 
+      var stringJson = JSON.stringify(json);
 
+            // pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
       //Create profile in database
-      pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+      pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "');",function(err,rows){
               if(err) throw err;
               console.log('PERFIL CREADO');
 
@@ -654,10 +681,10 @@ console.log("Request handler 'piService' was called.");
                                }
                             });
 
-
+                            var stringJson = JSON.stringify(json);
 
                             //Create profile in database
-                            pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW());",function(err,rows){
+                            pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha,completeJson) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "');",function(err,rows){
                                     if(err) throw err;
                                     console.log('PERFIL CREADO');
 
@@ -790,14 +817,14 @@ function lastProfile(response,postData, cookieJar){
 
           var personalityArray = [];
           for (var i = 0;i < result.length; i++) {
-              personalityArray.push({percentile: result[i].percentile});
+              personalityArray.push({trait_id: result[i].trait_id, percentile: result[i].percentile});
           }
 
           pool.query("select trait_id, percentile from Trait t join Profile p ON t.profile_id = p.id where t.category='needs' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
               if (err) throw err;
               var needsArray = [];
               for (var i = 0;i < result.length; i++) {
-                  needsArray.push({percentile: result[i].percentile});
+                  needsArray.push({trait_id: result[i].trait_id, percentile: result[i].percentile});
               }
               pool.query("select trait_id, percentile from Trait t join Profile p ON t.profile_id = p.id where t.category='values' and p.id = '"+currentID+"'order by t.trait_id ASC;", function (err, result, fields) {
                   if (err) throw err;
@@ -1056,6 +1083,7 @@ exports.piServiceEssay = piServiceEssay;
 exports.piServiceTwitter = piServiceTwitter;
 exports.pdfService = pdfService;
 exports.lastProfile = lastProfile;
+exports.fullReportJson = fullReportJson;
 
 //Acciones o servicios que el cliente solicita automaticamente
 exports.cssContent = cssContent;

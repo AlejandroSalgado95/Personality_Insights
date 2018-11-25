@@ -70,10 +70,10 @@
                     <div id="insightsDescription">Cargando...</div>
                   </div>
                 </div>
-                <div style="width:24em;">
+                <div id="botones" style="width:24em;">
                     <a href="/Subir" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Realizar nuevo análisis</a>
                     <!--<a href="" id="descPDF" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Descargar PDF</a>-->
-                    <a href="" id="descCSV" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Descargar CSV</a>
+                    <!--<a  href="" id="descCSV" style="margin-bottom:16px; font-size:14px;"class="deep-purple darken-1 btn">Descargar CSV</a>-->
                     <form id="myForm" title = "Análisis por Twitter" action="/PIServiceTwitter" method = "post" hidden>
 
                         <label>Cuenta de Twitter:</label>
@@ -211,11 +211,8 @@
 <!-- jQuery Library -->
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
-
 
 
   <!--materialize js-->
@@ -266,6 +263,7 @@
 
   <script src="scripts/charting.js"></script>
   <script src="scripts/twitter.js"></script>
+  <script src="scripts/indexScript.js"></script>
   <script src="scripts/otherFunctionality.js"></script>
 
   </body>
