@@ -71,14 +71,13 @@
     <div class="container2">
       <br>
       <h4 class="header center blue-grey-text text-lighten-4">Análisis de personalidad</h4>
-      <div class="row card">
         <script>
             function checkform(evt)    {
                 var myForm = document.escrito;
                 var condition = true;
-                if(myForm.textAreaContent.value.length < 3500){
+                if(myForm.textAreaContent.value.length < 1){
 
-                    alert("Es necesario que sean al menos 3500 caracteres");
+                    alert("No hay ningún texto a analizar.");
                     condition = false;
                 }
                 if(!condition) {
@@ -91,36 +90,60 @@
         <!--START BUTTON  This sends all content data to Personality Insights-->
         <!--<form action="/PIServiceEssay" method="post" class="col s8  white">-->
       <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkform(event)">
-        <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
-          <div class="input-field card-content col s12">
-            <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
-            <!--<textarea id="textarea2" name = "textAreaContent" class="materialize-textarea" data-length="1000"></textarea>-->
-            <!--<label for="textarea2">Escribe aquí</label>-->
+        <div class="row card">
+          <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
+              <div class="input-field card-content col s12">
 
-            <div class="containerIdioma">
-              <h6>Idioma del Ensayo</h6>
-              <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
-                <option value="en">Inglés</option>
-                <option value="es">Español</option>
-              </select>
-            </div>
+                <!--Nombre reporte -->
+                <div class="input-field col s6">
+                  <input id="profileName" name="profileName" type="text" class="validate">
+                  <label for="profileName">Nombre del Reporte</label>
+                </div>
+
+                <!--info Persona -->
+                <h5 class="col s12 center-align">Información de la Persona a Analizar</h5>
+                <div class="input-field col s6">
+                  <select name="gender">
+                    <option value="" disabled selected>--</option>
+                    <option value="Mujer">Mujer</option>
+                    <option value="Hombre">Hombre</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                  <label>Género</label>
+                </div>
+              </div>
           </div>
         </div>
-        <div class="card-action">
-<!--
-        <a href="#" class="deep-purple-text text-darken-1">Subir desde computadora</a>
--->
-      <!-- Si son menos de 500 palabras, no deja dar click -->
-      <input type="submit" id="analizar" class="deep-purple darken-1 btn" value="Analizar Ensayo">
+        <div class="row card">
+          <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
+            <div class="input-field card-content col s12">
+              <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
+              <!--<textarea id="textarea2" name = "textAreaContent" class="materialize-textarea" data-length="1000"></textarea>-->
+              <!--<label for="textarea2">Escribe aquí</label>-->
 
-      <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+              <div class="containerIdioma">
+                <h6>Idioma del Ensayo</h6>
+                <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
+                  <option value="en">Inglés</option>
+                  <option value="es">Español</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+              <!--
+            <a href="#" class="deep-purple-text text-darken-1">Subir desde computadora</a>-->
+            <!-- Si son menos de 500 palabras, no deja dar click -->
+            <input type="submit" id="analizar" class="deep-purple darken-1 btn" value="Analizar Ensayo">
 
-      </div>
+            <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
+
+          </div>
+        </div>
       </form>
 
 
       <!--END BUTTON PI-->
-    </div>
       <br>
       <ul class="right hide-on-med-and-down">
         <li>
