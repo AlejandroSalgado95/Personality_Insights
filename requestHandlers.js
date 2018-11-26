@@ -317,14 +317,14 @@ function piServiceEssay(response,postData, cookieJar){
             // pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "');",function(err,rows){
             //INSERT INTO InfoAuthor (gender) VALUES ('"+ gender "');
       //Create profile in database
-      pool.query("INSERT INTO InfoAuthor (gender) VALUES ('"+ gender + "');", function(err,rows0){
+      pool.query("INSERT INTO Person (gender) VALUES ('"+ gender + "');", function(err,rows0){
           if(err) throw err;
 
-          pool.query("SELECT id_author FROM InfoAuthor ORDER BY id_author desc LIMIT 1;", function(err,rows1){
+          pool.query("SELECT id FROM Person ORDER BY id desc LIMIT 1;", function(err,rows1){
 
               if(err) throw err;
 
-              id_author = rows1[0].id_author;
+              id_author = rows1[0].id;
 
               pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "'," + id_author + ");",function(err,rows){
                       if(err) throw err;

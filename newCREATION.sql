@@ -1,6 +1,8 @@
+DROP TABLE IF EXISTS Person;
 DROP TABLE IF EXISTS Trait;
 DROP TABLE IF EXISTS Profile;
 DROP TABLE IF EXISTS User;
+
 
 /*Ahorita la base de datos esta para que un user(email) pueda tener varios profiles, y cada profile
 tiene asociado una info de la persona del profile (la persona de la cuenta de twitter o que escribio el ensayo),
@@ -11,6 +13,13 @@ pueda encontrar facilmente. Para eso estaria bien que (id_user, profileName) sea
 pero no se puede hacer eso ahorita porque habria nulos en profileName, tendriamos que borrar la informacion.
 Ahorita tiene profileName pero este se puede repetir por usuario
 */
+
+CREATE TABLE Person(
+	id INT UNIQUE NOT NULL AUTO_INCREMENT,
+	gender VARCHAR(20),
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE Profile(
 	id INT UNIQUE NOT NULL AUTO_INCREMENT,
 	name VARCHAR(50) NOT NULL,
@@ -21,21 +30,15 @@ CREATE TABLE Profile(
 	fecha DATETIME,
 	completeJson TEXT,
 	id_author INT,
-	PRIMARY KEY (id)
-	FOREIGN KEY (id_author) references InfoAuthor (id_author)
+	PRIMARY KEY (id),
+	FOREIGN KEY (id_author) references Person(id)
 );
 
 /*
 ALTER TABLE Profile
 ADD id_author INT,
 ADD profileName VARCHAR(50),
-ADD CONSTRAINT FK_Profile FOREIGN KEY (id_author) REFERENCES InfoAuthor(id_author); */
-
-CREATE TABLE InfoAuthor(
-	id_author INT UNIQUE NOT NULL AUTO_INCREMENT,
-	gender VARCHAR(20),
-	PRIMARY KEY (id_author)
-);
+ADD CONSTRAINT FK_Profile FOREIGN KEY (id_author) REFERENCES Person(id); */
 
 CREATE TABLE Trait(
 	trait_id VARCHAR(50) NOT NULL,
