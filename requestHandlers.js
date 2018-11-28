@@ -429,6 +429,9 @@ console.log("Request handler 'piService' was called.");
  twitter.get('oauth/authorize', {force_login:true}, function(error, tweets, response) {
  });*/
 
+ var profileName = querystring.parse(postData).profileName;
+ var gender = querystring.parse(postData).gender;
+
 
   console.log("Request handler 'piServiceTwitter' was called.");
 
@@ -691,7 +694,7 @@ console.log("Request handler 'piService' was called.");
                             var stringJson = JSON.stringify(json);
 
                             //Create profile in database
-                            pool.query("INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha,completeJson) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "');",function(err,rows){
+                            pool.query("BEGIN; INSERT INTO Person (gender) VALUES ('"+ gender + "'); INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "', LAST_INSERT_ID()); COMMIT;",function(err,rows){
                                     if(err) throw err;
                                     console.log('PERFIL CREADO');
 

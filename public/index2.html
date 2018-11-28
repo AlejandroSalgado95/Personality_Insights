@@ -28,6 +28,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/index2.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 </head>
 
@@ -72,7 +73,7 @@
       <br>
       <h4 class="header center grey-text text-darken-4">Análisis de personalidad</h4>
         <script>
-            function checkform(evt)    {
+            function checkformEssay(evt)    {
                 var myForm = document.escrito;
                 var condition = true;
                 if(myForm.textAreaContent.value.length < 1){
@@ -88,8 +89,11 @@
             }
         </script>
         <!--START BUTTON  This sends all content data to Personality Insights-->
+
+        <!--Agregar boton para cambiar de analisis de ensayo a twitter (para que twitter no sea pop up),
+          usando display none y cambiando el action de la form de ServiceESSAY a ServiceTwitter  -->
         <!--<form action="/PIServiceEssay" method="post" class="col s8  white">-->
-      <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkform(event)">
+      <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkformEssay(event)">
         <div class="row card">
           <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
               <div class="input-field card-content col s12">
@@ -114,27 +118,52 @@
               </div>
           </div>
         </div>
-        <div class="row card">
+        <h6>Analizar por:</h6>
+        <button type="button" class="switchAnalizar" id="twitterSelect" name="button">Twitter</button>
+        <button type="button" class="switchAnalizar selectedAnalysis" id="ensayoSelect" name="button">Ensayo</button>
+
+        <!--SECCION DE ENSAYO-->
+        <div class="row card selectDiv" id="ensayo">
           <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
             <div class="input-field card-content col s12">
               <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
               <div class="containerIdioma">
-                <h6>Idioma del Ensayo</h6>
-                <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
-                  <option value="en">Inglés</option>
-                  <option value="es">Español</option>
-                </select>
+                <div class="input-field col s6">
+                  <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
+                    <option value="" disabled selected>--</option>
+                    <option value="en">Inglés</option>
+                    <option value="es">Español</option>
+                  </select>
+                  <label>Idioma del Ensayo</label>
+                </div>
               </div>
             </div>
           </div>
           <div class="card-action">
-              <!--
-            <a href="#" class="deep-purple-text text-darken-1">Subir desde computadora</a>-->
             <!-- Si son menos de 500 palabras, no deja dar click -->
-            <input type="submit" id="analizar" class="deep-purple darken-1 btn" value="Analizar Ensayo">
+            <input type="submit" formaction="/PIServiceEssay" id="analizarEnsayo" class="deep-purple darken-1 btn" value="Analizar Ensayo">
+          <!--  <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>-->
+          </div>
+        </div>
 
-            <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>
-
+        <!-- SECCION DE TWITTER-->
+        <div class="row card selectDiv hide" id="twitter">
+          <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
+            <div class="input-field card-content col s12">
+              <label>Cuenta de Twitter:</label>
+              <input type="text" id="account" name = "twitterAccount"> <!--required le quite un required-->
+              <div class="input-field col s6">
+                <select id = "accountLang" name = "tweetsLang">
+                  <option value="" disabled selected>--</option>
+                   <option value = "en">Inglés</option>
+                   <option value = "es">Español</option>
+                </select>
+                <label>Idioma</label>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <input type="submit" formaction="/PIServiceTwitter" id="analizarTwitter" class="deep-purple darken-1 btn" value="Analizar Twitter">
           </div>
         </div>
       </form>
@@ -253,7 +282,7 @@
   <script src="scripts/charting.js"></script>
   <script src="scripts/twitter.js"></script>
   <script src="scripts/otherFunctionality.js"></script>
-
+  <script src="scripts/index2script.js"></script>
 
 
   </body>
