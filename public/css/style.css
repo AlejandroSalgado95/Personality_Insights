@@ -35,18 +35,20 @@ html {
 }
 
 /*cambiar estilo de los selects*/
+
+/*
 .select-wrapper .caret{
   top: 25%!important;
 }
 
 .select-wrapper {
-  /*width: 200px!important;*/
 }
 
 .select-dropdown{
   font-size: 0.9em!important;
-}
+}*/
 
+/*Idioma ensayo*/
 .containerIdioma{
   width: 30%;
   margin: 25px auto 0px auto;
@@ -134,10 +136,6 @@ textarea:-ms-input-placeholder {
 color: #7d868e;
 }
 
-/* COMO esta integrado bootstrap y materialize salen dos flechas en el select, lo sig es para que solo salga la flecha de materialize. Lo mejor seria quitar bootstrap y adaptar los estilos para que se vean bien con solo materialize*/
-.caret {
-  border-color: transparent !important;
-}
 
 /****ESTILOS DIALOG PARA ANALIZAR POR TWITTER */
 .ui-dialog-titlebar{
@@ -167,16 +165,18 @@ span.ui-button-icon.ui-icon.ui-icon-closethick{
   background-image:  none;
 }
 
+/*
 ul.dropdown-content.select-dropdown li span {
-    color: black; /* no need for !important :) */
+    color: black;
     font-size: 1em;
-}
+}*/
 
 /* label underline focus color */
+/*
 .input-field input[type=text]:focus {
   border-bottom: 1px solid black;
   box-shadow: 0 1px 0 0 #000;
-}
+}*/
 
 .dialogTwitter{
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);

@@ -3,57 +3,34 @@
 <html lang="en">
 <head>
   <link rel="icon"  href="img/favicon.png" sizes="any" />
-
-
-<meta charset="UTF-8">
-<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
   <title>Personality Insights</title>
 
 
   <!-- jQuery Library -->
-
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
   <!-- CSS  -->
+  <!--fonts e iconos-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <!-- CSS  -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!--materialize archivo -->
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <!-- mis stylesheets -->
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/index2.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 </head>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-
-</head>
-
 <body>
 
-    <!--<nav class="nav-extended purple darken-4">
-    <div class="nav-wrapper">
-      <img src="img/in.png" class="img-fluid pull-xs-left" style="margin-top:24px; margin-left:32px; height:40px">
-<span style="position:absolute; top:10px;margin-left:10px; font-size: 17px;">Conectado como: <span id = "email" style=" margin-left: 10px; font-size: 17px;"></span> </span>
-      <ul style="position:absolute; top:10px;  left:1086px;" class="right hide-on-med-and-down">
-        <li><a href="/Informacion"><i class="material-icons left">home</i>Más información</a></li>
-<li><a href="/LogoutAction"><i class="material-icons left">exit_to_app</i></a></li>
-
-      </ul>
-    </div>
-  </nav>
--->
 
 <nav style="height:64px" class="nav-extended purple darken-4">
     <div class="nav-wrapper">
@@ -74,26 +51,78 @@
       <h4 class="header center grey-text text-darken-4">Análisis de personalidad</h4>
         <script>
             function checkformEssay(evt)    {
+              //checa que si haya un ensayo, el cual debe contener minimo 100 palabras
+              // (Watson no puede analizar ensayos con menos palabras)
                 var myForm = document.escrito;
-                var condition = true;
-                if(myForm.textAreaContent.value.length < 1){
+                $('#errorEnsayo').text('');
+                $('#errorIdioma').text('');
+                var valid = true;
 
-                    alert("No hay ningún texto a analizar.");
-                    condition = false;
+                if(myForm.textAreaContent.value.length < 1){
+                  //alert("No hay ningún texto a analizar.");
+                  $('#errorEnsayo').text('* No hay ningún texto a analizar.');
+                  valid = false;
+                } else{
+
+                  //nota: el numero de palabras que sale en microsoft word no concuerda con el conteo
+                  //de IBM Watson, hice unas pruebas y la expresion siguiente si concuerda con el conteo de IBM Watson
+                  var words = myForm.textAreaContent.value.match(/[A-Za-z]+/g).length;
+                  console.log("Number of Words");
+                  console.log(words);
+
+                  if (words < 100) {
+                    //alert("Watson no puede analizar ensayos con menos de 100 palabras, tu ensayo contiene " + words + " palabras");
+                    $('#errorEnsayo').text('* El ensayo debe contener mínimo 100 palabras. Tu ensayo tiene ' + words + ' palabras.');
+                    valid = false;
+                  }
                 }
-                if(!condition) {
-                    if(evt.preventDefault) { event.preventDefault(); }
-                    else if(evt.returnValue) { evt.returnValue = false; }
-                    else { return false; }
+
+                if(myForm.idiomaEnsayo.value == 0){
+                  valid = false;
+                  $('#errorIdioma').text('Favor de llenar este campo.');
                 }
+
+                if(!valid){
+                  evt.preventDefault();
+                  return false;
+                } else{
+                  return true;
+                }
+
+            }
+
+            function checkformTwitter(evt){
+              console.log("ENTRO a validacion twitter");
+
+              var myForm = document.escrito;
+              $('#errorCuentaTwit').text('');
+              $('#errorIdiomaTwit').text('');
+              var valid = true;
+
+              //checar que hayan puesto una cuenta de twitter
+              if($('#account').val() == ""){
+                $('#errorCuentaTwit').text("Favor de llenar este campo.");
+                valid = false;
+              }
+
+              //checar que hayan seleccionado idioma
+              if(myForm.tweetsLang.value == 0){
+                $('#errorIdiomaTwit').text("Favor de llenar este campo.");
+                valid = false;
+              }
+
+              //si no llenaron un campo, no darle submit al form
+              if(!valid){
+                evt.preventDefault();
+                return false;
+              } else{
+                return true;
+              }
             }
         </script>
-        <!--START BUTTON  This sends all content data to Personality Insights-->
 
-        <!--Agregar boton para cambiar de analisis de ensayo a twitter (para que twitter no sea pop up),
-          usando display none y cambiando el action de la form de ServiceESSAY a ServiceTwitter  -->
         <!--<form action="/PIServiceEssay" method="post" class="col s8  white">-->
-      <form action="/PIServiceEssay" method="post" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkformEssay(event)">
+      <form action="/PIServiceEssay" method="post" id="formAnalysis" class="col s8  white"  style="width:100%" name="escrito" onsubmit="checkformEssay(event)">
         <div class="row card">
           <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
               <div class="input-field card-content col s12">
@@ -108,7 +137,7 @@
                 <h5 class="col s12 center-align blue-grey-text text-lighten-4">Información de la Persona a Analizar</h5>
                 <div class="input-field col s6">
                   <select name="gender">
-                    <option value="" disabled selected>--</option>
+                    <option value="0" disabled selected>--</option>
                     <option value="Mujer">Mujer</option>
                     <option value="Hombre">Hombre</option>
                     <option value="NE">No especificado</option>
@@ -118,19 +147,27 @@
               </div>
           </div>
         </div>
-        <h6>Analizar por:</h6>
-        <button type="button" class="switchAnalizar" id="twitterSelect" name="button">Twitter</button>
-        <button type="button" class="switchAnalizar selectedAnalysis" id="ensayoSelect" name="button">Ensayo</button>
+
+        <!--Switch para escoger si analizar por twitter o ensayo -->
+        <div class="switch">
+          <h6 class="center-align">Analizar por:</h6>
+          <div class="center-align">
+            <button type="button" class="switchAnalizar" id="twitterSelect" name="button">Twitter</button>
+            <button type="button" class="switchAnalizar selectedAnalysis" id="ensayoSelect" name="button">Ensayo</button>
+          </div>
+        </div>
 
         <!--SECCION DE ENSAYO-->
         <div class="row card selectDiv" id="ensayo">
           <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
             <div class="input-field card-content col s12">
-              <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 800 palabras." data-length="1000"></textarea>
+              <textarea id="textarea2" name = "textAreaContent" placeholder="Coloca un ensayo de mínimo 100 palabras." data-length="1000"></textarea>
+              <p id="errorEnsayo" class="errorMessage"></p>
               <div class="containerIdioma">
-                <div class="input-field col s6">
-                  <select id="idiomaEnsayo" class="" name="idiomaEnsayo">
-                    <option value="" disabled selected>--</option>
+                <p id="errorIdioma" class="errorMessage"></p>
+                <div class="input-field col s9">
+                  <select id="idiomaEnsayo" name="idiomaEnsayo">
+                    <option value="0" disabled selected> - -</option>
                     <option value="en">Inglés</option>
                     <option value="es">Español</option>
                   </select>
@@ -140,25 +177,27 @@
             </div>
           </div>
           <div class="card-action">
-            <!-- Si son menos de 500 palabras, no deja dar click -->
             <input type="submit" formaction="/PIServiceEssay" id="analizarEnsayo" class="deep-purple darken-1 btn" value="Analizar Ensayo">
-          <!--  <a id= "twitterButton" href="/PIServiceTwitter" style="font-size:14px; color: white; margin-left:20px;" class=" blue accent-3 btn ">Análisis por Twitter<i style="padding-left:0.8em"class="fa fa-twitter"></i></a>-->
           </div>
         </div>
 
         <!-- SECCION DE TWITTER-->
         <div class="row card selectDiv hide" id="twitter">
           <div class="row" style="padding:20px 40px 10px 40px; margin-bottom: 10px">
-            <div class="input-field card-content col s12">
-              <label>Cuenta de Twitter:</label>
-              <input type="text" id="account" name = "twitterAccount"> <!--required le quite un required-->
-              <div class="input-field col s6">
+            <div class="card-content">
+              <div class="input-field col s6 offset-s3">
+                <label>Cuenta de Twitter:</label>
+                <input type="text" id="account" name = "twitterAccount"> <!--required le quite un required-->
+                <p id="errorCuentaTwit" class="errorMessage"></p>
+              </div>
+              <div class="input-field col s6 offset-s3">
                 <select id = "accountLang" name = "tweetsLang">
-                  <option value="" disabled selected>--</option>
+                  <option value="0" disabled selected>--</option>
                    <option value = "en">Inglés</option>
                    <option value = "es">Español</option>
                 </select>
                 <label>Idioma</label>
+                <p id="errorIdiomaTwit" class="errorMessage"></p>
               </div>
             </div>
           </div>
@@ -211,7 +250,7 @@
       <div class="row">
         <div class="col l6 s12">
           <h5 class="white-text">Información</h5>
-          <p class="grey-text text-lighten-4">No se aceptan menos de 800 palabras, ideal 1500. Tipos de escritos que puedes analizar: Reflexión personal, Ensayo académico, Ensayo de Admisión, Carta de exposición de motivos, Cuenta de Twitter,Texto extraído de un blog, Propósito de vida.</p>
+          <p class="grey-text text-lighten-4">No se aceptan menos de 100 palabras, ideal 1500. Tipos de escritos que puedes analizar: Reflexión personal, Ensayo académico, Ensayo de Admisión, Carta de exposición de motivos, Cuenta de Twitter,Texto extraído de un blog, Propósito de vida.</p>
         </div>
 
       </div>
@@ -229,29 +268,23 @@
 <!-- jQuery Library -->
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
 
 
-
   <!--materialize js-->
-  <script type="text/javascript" src="js/materialize.min.js"></script>
-
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
 
   <!--scrollbar-->
   <script type="text/javascript" src="js/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
-
   <!-- chartist -->
   <script type="text/javascript" src="js/plugins/chartist-js/chartist.min.js"></script>
-
 
   <!-- chartjs -->
   <script type="text/javascript" src="js/plugins/chartjs/chart.min.js"></script>
   <script type="text/javascript" src="js/plugins/chartjs/chartjs-sample-chart.js"></script>
-
 
   <!--plugins.js - Some Specific JS codes for Plugin Settings-->
   <script type="text/javascript" src="js/plugins.min.js"></script>
@@ -263,12 +296,15 @@
 
   <!--  Scripts-->
 
-  <script src="js/materialize.js"></script>
+  <!--<script src="js/materialize.js"></script>-->
+
+  <!--Chats.js-->
   <script src="js/init.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
   <script src="https://cdnjs.com/libraries/Chart.js"></script>
 
+  <!--HighCharts-->
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/treemap.js"></script>
