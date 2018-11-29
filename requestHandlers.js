@@ -649,7 +649,8 @@ console.log("Request handler 'piService' was called.");
                               // Content-type: el tipo de archivo a analizar, en este caso plain text
                               content_type: 'application/json',
                               content_language: tweetsLang,
-                              include_raw: false
+                              consumption_preferences: true,
+                              raw_scores: true
                       };
 
 
