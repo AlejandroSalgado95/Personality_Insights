@@ -37,6 +37,7 @@ var pool  = mysql.createPool({
 // });
 
 //Parametros para conectarse a la base de datos de digital ocean estando en el servidor,
+// asegurate que al subir los cambios al droplet, que sean estos parametros los que esten descomentedaos
 // var pool  = mysql.createPool({
 //  connectionLimit : 10,
 //  host            : 'localhost',
