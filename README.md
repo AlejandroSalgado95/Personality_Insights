@@ -1,7 +1,7 @@
 # Personality_Insights
 
 Descripcion:
-Aplicación web que incorpora el servicio de Personality Insights de IBM, proyecto desarrollado en Mostla para el Centro de Inteligencia
+Aplicación web que incorpora el servicio de Personality Insights de IBM, proyecto desarrollado en Mostla para el Centro de Inteligencia para la Educación.
 
 Modo de  uso:
 - Entrar con cualquier correo y dar click en entrar
