@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Proposito de este modulo: inicializar todo el codigo backend necesario para que la aplicacion web arranque y funcione
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//yey
 
 var server = require("./server"); //Modulo que se encarga de recibir con integridad un request (header del request y su contenido via metodo Post o Get) del cliente, para despues entregarselo al modulo 'router'
 var router = require("./router"); //Modulo que se encarga de averiguar qué recurso o accion esta solicitando el cliente para determinar a qué funcion encomendarle atender la solicitud del cliente
