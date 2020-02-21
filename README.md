@@ -1,13 +1,13 @@
 # Personality_Insights
 
-Descripcion:
+## Descripcion:
 Aplicación web que incorpora el servicio de Personality Insights de IBM, proyecto desarrollado en Mostla para el Centro de Inteligencia para la Educación.
 
-Notas: 
+## Notas: 
 - Entrar con el correo: "a.salgado.gaspar@gmail.com", para visualizar una cuenta con un analasis de personalidad ya guardado.
 - La API para el uso de Personality Insights de IBM fue actualizada en Octubre 2019. Temporalmente la aplicacion no cuenta con dichos servicios hasta modificar la llamada a la API acorde a las actualizaciones hechas por IBM.
 
-Modo de  uso:
+## Modo de  uso:
 - Entrar con cualquier correo y dar click en entrar
 - Una vez ingresado, la sesion dura 30 minutos. Mas tardar de eso, sera necesario ingresar de nuevo en la aplicacion web.
 - En la pagina a la que se acaba de ingresar, seguir una de las siguientes dos opciones:
