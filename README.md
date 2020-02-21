@@ -3,7 +3,10 @@
 Descripcion:
 Aplicación web que incorpora el servicio de Personality Insights de IBM, proyecto desarrollado en Mostla para el Centro de Inteligencia para la Educación.
 
-Modo de  uso:
+## Notas:
+- La API del servicio Personality Insights de IBM fue actualizada en Octubre 2019. Se ha desabilitado la llamada a la API en la aplicación hasta incorporar los cambios necesarios para consultar la API.
+
+## Modo de  uso:
 - Entrar con cualquier correo y dar click en entrar
 - Una vez ingresado, la sesion dura 30 minutos. Mas tardar de eso, sera necesario ingresar de nuevo en la aplicacion web.
 - En la pagina a la que se acaba de ingresar, seguir una de las siguientes dos opciones:
