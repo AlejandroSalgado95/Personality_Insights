@@ -1,12 +1,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Proposito de este modulo: contener todas las funciones necesarias para despachar cualquier recurso (html,css,js,pdf,etc) o servicio (IBM PI, login, logout,etc) solicitado por un cliente
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
+//var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 var twit = require('twitter'); //modulo para utilizar la api de twitter y hacer gets de tweets de algun usuario, etc.
 var fs = require('fs'); //modulo para accesar, crear, modificar, borrar archivos de extension .txt entre otros
 var mysql = require('mysql'); //modulo para establecer una conexion con la base de datos de un servidor MySQL
 var querystring = require('querystring'); //modulo para parsear en un objeto con sus atributos (ej. nombredelobjeto.atributo) a la informacion enviada por el usuario via metodo POST
 var async = require("async");  //modulo para utilizar funciones asincronas (ej. each,foreach, y otros loops de manera asincrona)
+
+
+
+
+
+const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Acceso al servidor MySQL para usar la base de datos que esta aplicacion web necesita
@@ -16,14 +24,21 @@ var async = require("async");  //modulo para utilizar funciones asincronas (ej. 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //BASE De datos de prueba
-var pool  = mysql.createPool({
+/* var pool  = mysql.createPool({
  connectionLimit : 10,
  host            : 'den1.mysql2.gear.host',
  user            : 'piapplicationdb',
  password        : 'yell0wC@t',
  database        : 'piapplicationdb',
  multipleStatements : true
-});
+}); */
+
+/* var pool  = mysql.createPool({
+  host            : 'localhost',
+  user            : 'root',
+  password        : 'password',
+  database        : 'piapplicationdb'
+ }); */
 
 //Parametros para conectarse a la base de datos de digital ocean desde fuera del servidor
 //falta habilitar que el servidor acepte conexiones que no sean de localhost
@@ -38,24 +53,37 @@ var pool  = mysql.createPool({
 
 //Parametros para conectarse a la base de datos de digital ocean estando en el servidor,
 // asegurate que al subir los cambios al droplet, que sean estos parametros los que esten descomentedaos
-// var pool  = mysql.createPool({
-//  connectionLimit : 10,
-//  host            : 'localhost',
-//  user            : 'root',
-//  password        : 'b930f62a8d513ae4962f7c37433aa263482f343d9ef60e77',
-//  database        : 'MostlaPI',
-//  multipleStatements : true
-// });
+/*
+var pool  = mysql.createPool({
+ connectionLimit : 10,
+ host            : 'localhost',
+ user            : 'root',
+ password        : 'b930f62a8d513ae4962f7c37433aa263482f343d9ef60e77',
+ database        : 'MostlaPI',
+ multipleStatements : true
+});
+*/
+
+var pool  = mysql.createPool({
+ connectionLimit : 10,
+ host            : 'den1.mysql5.gear.host',
+ user            : 'pidbtest',
+ password        : 'abc123?!',
+ database        : 'pidbtest',
+ multipleStatements : true
+});
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Credenciales para utilizar la API de twitter
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var twitter = new twit({
 
-consumer_key : 'hhsmOJJ5xJelPS2IWZt9KsT2O', //Credenciales para autenticar la APLICACION WEB
-consumer_secret : '74VD7iRFWMxWiyji2LqWKfXHGG4OvJy3lZGvrE5i6hL1hKMhwB', //Credenciales para autenticar la APLICACION WEB
-access_token_key : '3257919310-aE7rBtDVCTFlSJDe6gnRAiVLXEINGlw5hTuoJN6', //Credenciales para autenticar al USUARIO (permite a la aplicacion postear tweets en la cuenta del usuario autenticado)
-access_token_secret : 'Ba1Ui4sAQ6QB4EECiDRlNOH6RN5o9OV9hBX38LXvYsMtU' //Credenciales para autenticar al USUARIO (permite a la aplicacion postear tweets en la cuenta del usuario autenticado)
+consumer_key : 'm1CwA6juVn595Diw1lzUa9jsS', //Credenciales para autenticar la APLICACION WEB
+consumer_secret : 'iYTXasbrdcegtyVBB3KjqLaNKeNQtr5AF2IG3t04fRLXMGcBHX', //Credenciales para autenticar la APLICACION WEB
+access_token_key : '1060281446613639168-UTNNz2aNPKpTqKKNi4IzsdULEcHKCW', //Credenciales para autenticar al USUARIO (permite a la aplicacion postear tweets en la cuenta del usuario autenticado)
+access_token_secret : 'nHxvObVGTjc1L7NOcao3Dv02TayxbjtmvHMccDnD6ZVAC' //Credenciales para autenticar al USUARIO (permite a la aplicacion postear tweets en la cuenta del usuario autenticado)
 
 });
 
@@ -63,11 +91,24 @@ access_token_secret : 'Ba1Ui4sAQ6QB4EECiDRlNOH6RN5o9OV9hBX38LXvYsMtU' //Credenci
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Credenciales para utilizar la API de IBM Personality Insights
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  var personality_insights = new PersonalityInsightsV3({
+
+/*  var personality_insights = new PersonalityInsightsV3({
       username: 'ebc5e198-5f1b-4353-ae47-810792af98d0',
       password: 'hyh0VJTjfm1E',
       version_date: '2017-10-13'
-  });
+  });*/
+
+
+
+  var personality_insights = new PersonalityInsightsV3({
+  version: '2017-10-13',
+  authenticator: new IamAuthenticator({
+    apikey: 'XKfVABbFcJC-DTJw14tp8OMJiiq3duO1bTsKOlHHSCZg',
+  }),
+  url: 'https://api.us-south.personality-insights.watson.cloud.ibm.com/instances/e07f6959-1da4-4d07-b05e-ab34e185fcd3',
+});
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Funcion que entrega al cliente la view para iniciar sesion en la app web
@@ -245,8 +286,8 @@ function piServiceEssay(response,postData, cookieJar){
   console.log("Request handler 'piService' was called.");
   console.log("'piService' handler received: ");
 
-  console.log(querystring.parse(postData).textAreaContent);
-  console.log(querystring.parse(postData));
+  //console.log(querystring.parse(postData).textAreaContent);
+  //console.log(querystring.parse(postData));
 
   var profileName = querystring.parse(postData).profileName;
   var gender = querystring.parse(postData).gender;
@@ -270,10 +311,10 @@ function piServiceEssay(response,postData, cookieJar){
       // Content: el texto a analizar
       content: querystring.parse(postData).textAreaContent,
       // Content-type: el tipo de archivo a analizar, en este caso plain text
-      content_type: 'text/plain;charset=utf-8',
-      content_language: querystring.parse(postData).idiomaEnsayo, //idioma ensayo es el valor del select del idioma
-      consumption_preferences: true,
-      raw_scores: true
+      contentType: 'text/plain;charset=utf-8',
+      contentLanguage: querystring.parse(postData).idiomaEnsayo, //idioma ensayo es el valor del select del idioma
+      consumptionPreferences: true,
+      rawScores: true
       //en
   };
 
@@ -320,7 +361,9 @@ function piServiceEssay(response,postData, cookieJar){
       //Create profile in database
       //Se hacen ambos inserts en una transaccion para que sea todo o nada, last_inser_ID es el id de la persona que se acaba
       //de agregar a person
-      pool.query("BEGIN; INSERT INTO Person (gender) VALUES ('"+ gender + "'); INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "', LAST_INSERT_ID()); COMMIT;",function(err,rows){
+
+      /*
+      pool.query("BEGIN; INSERT INTO Person (gender) VALUES ('"+ gender + "'); INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.result.word_count + "','" + json.result.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "', LAST_INSERT_ID()); COMMIT;",function(err,rows){
               if(err) throw err;
               console.log('PERFIL CREADO');
 
@@ -333,7 +376,7 @@ function piServiceEssay(response,postData, cookieJar){
                         id = valuesFromSelection[0].id;
                         //Insertar los 5 big_5
                         for (var iA = 0; iA < 5; iA++) {
-                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
+                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.personality[iA].trait_id + "','" +  json.result.personality[iA].name + "','" + json.result.personality[iA].percentile + "','" +  json.result.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
                                   if(err) throw err;
                                   //console.log("Big Five Creado");
                                   papasCreados++; //papa = 1 big_5
@@ -343,17 +386,17 @@ function piServiceEssay(response,postData, cookieJar){
                                   if(papasCreados>=5){
                                     console.log("YA VOY A CREAR LOS HIJOS");
                                       for(iA = 0; iA<5; iA++){
-                                      for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
-                                        console.log("\n"+json.personality[iA].name+"\n");
-                                        console.log( json.personality[iA].children[iB].trait_id );
-                                        console.log( json.personality[iA].children[iB].name);
-                                        console.log( json.personality[iA].children[iB].percentile);
-                                        console.log( json.personality[iA].children[iB].category);
-                                        console.log( json.personality[iA].trait_id);
+                                      for (var iB = 0; iB < json.result.personality[iA].children.length; iB++) {
+                                        console.log("\n"+json.result.personality[iA].name+"\n");
+                                        console.log( json.result.personality[iA].children[iB].trait_id );
+                                        console.log( json.result.personality[iA].children[iB].name);
+                                        console.log( json.result.personality[iA].children[iB].percentile);
+                                        console.log( json.result.personality[iA].children[iB].category);
+                                        console.log( json.result.personality[iA].trait_id);
 
-                                      pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
-                                      + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
-                                      + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
+                                      pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.personality[iA].children[iB].trait_id
+                                      + "','" +  json.result.personality[iA].children[iB].name + "','" + json.result.personality[iA].children[iB].percentile + "','" +  json.result.personality[iA].children[iB].category
+                                      + "'," + id + ",'" + json.result.personality[iA].trait_id + "');",function(err,rows){
                                                 if(err) throw err;
                                                 console.log('Children Created');
                                         });
@@ -363,9 +406,9 @@ function piServiceEssay(response,postData, cookieJar){
                           });
                         }
                         //Save needs in database
-                        for (var iC = 0; iC < json.needs.length; iC++) {
-                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
-                          + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
+                        for (var iC = 0; iC < json.result.needs.length; iC++) {
+                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.needs[iC].trait_id
+                          + "','" +  json.result.needs[iC].name + "','" + json.result.needs[iC].percentile + "','" +  json.result.needs[iC].category
                           + "'," + id + ", NULL);",function(err,rows){
                                     if(err) throw err;
                                     console.log('NEED Created');
@@ -373,19 +416,34 @@ function piServiceEssay(response,postData, cookieJar){
                         }
 
                         //Save values in database
-                        for (var iD = 0; iD < json.values.length; iD++) {
-                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
-                          + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
+                        for (var iD = 0; iD < json.result.values.length; iD++) {
+                          pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.values[iD].trait_id
+                          + "','" +  json.result.values[iD].name + "','" + json.result.values[iD].percentile + "','" +  json.result.values[iD].category
                           + "'," + id + ", NULL);",function(err,rows){
                                     if(err) throw err;
                                     console.log('VALUE Created');
                             });
                         }
+
+                        fs.readFile('./public/index.html', null, function (error,data){
+
+                                if (error){
+                                   response.writeHead( 302, { "Location": "./public/error.html" } );
+                                        //response.write('File not found!');
+                                } else{
+                                    response.writeHead(200, {"Content-Type": "text/html"});
+                                    response.write(data);
+                                }
+
+                                response.end();
+
+                        });
+
                 });
-      });
+      });*/
 
 
-        fs.readFile('./public/index.html', null, function (error,data){
+        fs.readFile('./public/index2.html', null, function (error,data){
 
         if (error){
           response.writeHead( 302, { "Location": "./public/error.html" } );
@@ -694,9 +752,16 @@ console.log("Request handler 'piService' was called.");
                             });
 
                             var stringJson = JSON.stringify(json);
+                            console.log("ID user: " + id_user);
+                            console.log("gender: " + gender);
+                            console.log("Processed language: " + json.result.processed_language);
+                            console.log("Profile name : " + profileName);
+                            console.log("Word count: " + json.result.word_count);
 
                             //Create profile in database
-                            pool.query("BEGIN; INSERT INTO Person (gender) VALUES ('"+ gender + "'); INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.word_count + "','" + json.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "', LAST_INSERT_ID()); COMMIT;",function(err,rows){
+                            
+                            /*
+                            pool.query("BEGIN; INSERT INTO Person (gender) VALUES ('"+ gender + "'); INSERT INTO Profile (name,word_Count,processed_Language,id_User,fecha, completeJson, profileName, id_author) VALUES ('" + name + "','" + json.result.word_count + "','" + json.result.processed_language + "','" + id_user + "', NOW(),'" + stringJson + "','" + profileName + "', LAST_INSERT_ID()); COMMIT;",function(err,rows){
                                     if(err) throw err;
                                     console.log('PERFIL CREADO');
 
@@ -709,7 +774,7 @@ console.log("Request handler 'piService' was called.");
                                               id = valuesFromSelection[0].id;
                                               //Insertar los 5 big_5
                                               for (var iA = 0; iA < 5; iA++) {
-                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].trait_id + "','" +  json.personality[iA].name + "','" + json.personality[iA].percentile + "','" +  json.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.personality[iA].trait_id + "','" +  json.result.personality[iA].name + "','" + json.result.personality[iA].percentile + "','" +  json.result.personality[iA].category+ "'," + id + ", NULL);",function(err,rows){
                                                         if(err) throw err;
                                                         //console.log("Big Five Creado");
                                                         papasCreados++; //papa = 1 big_5
@@ -719,17 +784,17 @@ console.log("Request handler 'piService' was called.");
                                                         if(papasCreados>=5){
                                                           console.log("YA VOY A CREAR LOS HIJOS");
                                                             for(iA = 0; iA<5; iA++){
-                                                            for (var iB = 0; iB < json.personality[iA].children.length; iB++) {
-                                                              console.log("\n"+json.personality[iA].name+"\n");
-                                                              console.log( json.personality[iA].children[iB].trait_id );
-                                                              console.log( json.personality[iA].children[iB].name);
-                                                              console.log( json.personality[iA].children[iB].percentile);
-                                                              console.log( json.personality[iA].children[iB].category);
-                                                              console.log( json.personality[iA].trait_id);
+                                                            for (var iB = 0; iB < json.result.personality[iA].children.length; iB++) {
+                                                              console.log("\n"+json.result.personality[iA].name+"\n");
+                                                              console.log( json.result.personality[iA].children[iB].trait_id );
+                                                              console.log( json.result.personality[iA].children[iB].name);
+                                                              console.log( json.result.personality[iA].children[iB].percentile);
+                                                              console.log( json.result.personality[iA].children[iB].category);
+                                                              console.log( json.result.personality[iA].trait_id);
 
-                                                            pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.personality[iA].children[iB].trait_id
-                                                            + "','" +  json.personality[iA].children[iB].name + "','" + json.personality[iA].children[iB].percentile + "','" +  json.personality[iA].children[iB].category
-                                                            + "'," + id + ",'" + json.personality[iA].trait_id + "');",function(err,rows){
+                                                            pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.personality[iA].children[iB].trait_id
+                                                            + "','" +  json.result.personality[iA].children[iB].name + "','" + json.result.personality[iA].children[iB].percentile + "','" +  json.result.personality[iA].children[iB].category
+                                                            + "'," + id + ",'" + json.result.personality[iA].trait_id + "');",function(err,rows){
                                                                       if(err) throw err;
                                                                       console.log('Children Created');
                                                               });
@@ -739,9 +804,9 @@ console.log("Request handler 'piService' was called.");
                                                 });
                                               }
                                               //Save needs in database
-                                              for (var iC = 0; iC < json.needs.length; iC++) {
-                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.needs[iC].trait_id
-                                                + "','" +  json.needs[iC].name + "','" + json.needs[iC].percentile + "','" +  json.needs[iC].category
+                                              for (var iC = 0; iC < json.result.needs.length; iC++) {
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.needs[iC].trait_id
+                                                + "','" +  json.result.needs[iC].name + "','" + json.result.needs[iC].percentile + "','" +  json.result.needs[iC].category
                                                 + "'," + id + ", NULL);",function(err,rows){
                                                           if(err) throw err;
                                                           console.log('NEED Created');
@@ -749,9 +814,9 @@ console.log("Request handler 'piService' was called.");
                                               }
 
                                               //Save values in database
-                                              for (var iD = 0; iD < json.values.length; iD++) {
-                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.values[iD].trait_id
-                                                + "','" +  json.values[iD].name + "','" + json.values[iD].percentile + "','" +  json.values[iD].category
+                                              for (var iD = 0; iD < json.result.values.length; iD++) {
+                                                pool.query("INSERT INTO Trait (trait_id,name,percentile,category,profile_id, child_Of) VALUES ('" + json.result.values[iD].trait_id
+                                                + "','" +  json.result.values[iD].name + "','" + json.result.values[iD].percentile + "','" +  json.result.values[iD].category
                                                 + "'," + id + ", NULL);",function(err,rows){
                                                           if(err) throw err;
                                                           console.log('VALUE Created');
@@ -777,6 +842,21 @@ console.log("Request handler 'piService' was called.");
 
 
                                       });
+                            });*/
+
+                            fs.readFile('./public/index2.html', null, function (error,data){
+
+                              if (error){
+                                 response.writeHead( 302, { "Location": "./public/error.html" } );
+                                 console.log("No file found at location ... index");
+                                                      //response.write('File not found! index');
+                              } else{
+                                  response.writeHead(200, {"Content-Type": "text/html"});
+                                  response.write(data);
+                              }
+
+                              response.end();
+
                             });
 
 
